@@ -12,6 +12,12 @@ App::uses('Model', 'Model');
 class AppModel extends Model {
 
 /**
+ * 加载行为
+ * @var array
+ */
+	public $actsAs = array('Containable');
+
+/**
  * 数据验证前回调方法
  * 
  * @param array $options 参数

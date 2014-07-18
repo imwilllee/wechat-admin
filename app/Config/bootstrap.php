@@ -110,3 +110,5 @@ CakeLog::config('error', array(
 	'path' => $logsPath
 ));
 unset($logsPath);
+
+Configure::load('common');

@@ -10,6 +10,8 @@ App::uses('AppController', 'Controller');
  */
 class UsersController extends AppController {
 
+	public $controllerTitle = '系统用户管理';
+
 /**
  * 控制器方法调用前回调方法
  * 
@@ -23,11 +25,28 @@ class UsersController extends AppController {
 	}
 
 /**
- * admin_login method
+ * 用户登陆
  *
  * @return void
  */
 	public function admin_login() {
+		$this->layout = false;
+		$this->controllerTitle = '管理员登陆';
+		if ($this->request->is('post')) {
+			if ($this->Auth->login()) {
+				return $this->redirect($this->Auth->redirect());
+			}
+			$this->_showErrorMessage('账号或者密码错误！');
+		}
+	}
+
+/**
+ * 退出登陆
+ * 
+ * @return void
+ */
+	public function admin_logout() {
+		return $this->redirect($this->Auth->logout());
 	}
 
 /**
@@ -48,6 +67,9 @@ class UsersController extends AppController {
  * @return void
  */
 	public function admin_view($id = null) {
+		if (is_null($id)) {
+			$id = $this->Session->read('Auth.Admin.id');
+		}
 		if (!$this->User->exists($id)) {
 			throw new NotFoundException(__('Invalid user'));
 		}

@@ -18,6 +18,7 @@
  * 管理登陆入口
  */
 	Router::connect('/admin', array('controller' => 'users', 'action' => 'login', 'admin' => true));
+	Router::connect('/admin/logout', array('controller' => 'users', 'action' => 'logout', 'admin' => true));
 
 /**
  * 默认plugin路由定义
