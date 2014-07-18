@@ -95,14 +95,18 @@ Configure::write('Dispatcher.filters', array(
 /**
  * Configures default file logging options
  */
+$logsPath = LOGS . date('Y') . DS . date('m') . DS . date('d') . DS;
 App::uses('CakeLog', 'Log');
 CakeLog::config('debug', array(
 	'engine' => 'File',
 	'types' => array('notice', 'info', 'debug'),
 	'file' => 'debug',
+	'path' => $logsPath
 ));
 CakeLog::config('error', array(
 	'engine' => 'File',
 	'types' => array('warning', 'error', 'critical', 'alert', 'emergency'),
 	'file' => 'error',
+	'path' => $logsPath
 ));
+unset($logsPath);

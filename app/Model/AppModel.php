@@ -1,33 +1,33 @@
 <?php
-/**
- * Application model for CakePHP.
- *
- * This file is application-wide model file. You can put all
- * application-wide model-related methods here.
- *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
- * Licensed under The MIT License
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       app.Model
- * @since         CakePHP(tm) v 0.2.9
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
- */
-
 App::uses('Model', 'Model');
-
 /**
- * Application model for Cake.
+ * 项目全局模型
+ * 在此文件内定义的方法可在项目其他模型内调用
  *
- * Add your application-wide methods in the class below, your models
- * will inherit them.
- *
- * @package       app.Model
+ * @copyright WechatAdmin
+ * @package   app.Model
+ * @author    Will.Lee <im.will.lee@gmail.com>
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
 class AppModel extends Model {
+
+/**
+ * 数据验证前回调方法
+ * 
+ * @param array $options 参数
+ * @return boolean
+ */
+	public function beforeValidate($options = array()) {
+		return true;
+	}
+
+/**
+ * 数据保存前回调方法
+ * 
+ * @param array $options 参数
+ * @return boolean
+ */
+	public function beforeSave($options = array()) {
+		return true;
+	}
 }
