@@ -17,7 +17,7 @@
                     <div class="form-group">
                         <div class="input-group">
                             <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-                            <?php echo $this->Form->text('email', ['class' => 'form-control', 'placeholder' => '用户名或邮箱']); ?>
+                            <?php echo $this->Form->text('username', ['class' => 'form-control', 'placeholder' => '用户名或邮箱']); ?>
 
                         </div>
                     </div>

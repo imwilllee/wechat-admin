@@ -30,13 +30,24 @@ class UsersController extends AppController {
  * @return void
  */
 	public function admin_login() {
+		if ($this->Auth->loggedIn()) {
+			return $this->redirect(array('controller' => 'dashboard', 'action' => 'index', 'admin' => true));
+		}
 		$this->layout = false;
 		$this->controllerTitle = '管理员登陆';
 		if ($this->request->is('post')) {
-			if ($this->Auth->login()) {
-				return $this->redirect($this->Auth->redirect());
+			$user = $this->Auth->identify($this->request, $this->response);
+			if (empty($user)) {
+				$this->_showErrorMessage('账号或密码错误！');
+			} else {
+				if ($user['is_active'] == Configure::read('User.active_ok')) {
+					if ($this->Auth->login($user)) {
+						return $this->redirect($this->Auth->redirect());
+					}
+				} else {
+					$this->_showErrorMessage('该账号已被停用！');
+				}
 			}
-			$this->_showErrorMessage('账号或者密码错误！');
 		}
 	}
 

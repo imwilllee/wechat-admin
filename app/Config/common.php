@@ -9,9 +9,22 @@
  */
 $config = array(
 	'WeChat' => array(
-		'name' => 'WeChatAdmin(微信公众号开发框架)'
+		'name' => 'WeChatAdmin'
 	),
+/**
+ * 默认配置项
+ */
 	'Default' => array(
 		'avatar_src' => '/img/avatar/00.png'
+	),
+/**
+ * 用户配置项
+ */
+	'User' => array(
+		'active' => array(
+			0 => '禁止',
+			1 => '允许'
+		),
+		'active_ok' => 1,
 	)
 );

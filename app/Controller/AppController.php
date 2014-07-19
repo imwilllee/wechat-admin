@@ -15,7 +15,7 @@ class AppController extends Controller {
  * 加载的组件
  * @var array
  */
-	public $components = array('Session', 'Paginator', 'Auth', 'Security' => array('csrfUseOnce' => false));
+	public $components = array();
 
 /**
  * 加载的视图助手
@@ -63,19 +63,60 @@ class AppController extends Controller {
 	protected $_flashKey = 'Front';
 
 /**
+ * 构造函数重构
+ * 
+ * @param CakeRequest $request 请求对象
+ * @param CakeResponse $response 响应对象
+ */
+	public function __construct($request = null, $response = null) {
+		if (isset($request->params['admin']) && $request->params['admin'] == true) {
+			// 管理端加载配置
+			$this->_admin = true;
+			$this->components = array(
+				'Session',
+				'Paginator',
+				'Auth' => array(
+					'authenticate' => array(
+						'Admin' => array(
+							'userModel' => 'User',
+							'contain' => false,
+							// 'fields' => array('username' => 'email'),
+							// 多字段验证 支持数组
+							'both_fields' => 'email',
+							'scope' => null,
+							'passwordHasher' => array(
+								'className' => 'Simple',
+								'hashType' => 'sha256'
+							)
+						)
+					),
+					'loginAction' => array('controller' => 'users', 'action' => 'login', 'admin' => true),
+					'loginRedirect' => array('controller' => 'dashboard', 'action' => 'index', 'admin' => true),
+					'flash' => array('element' => 'Admin/Flash/warning', 'key' => 'Admin'),
+					'authError' => '无权访问该页面！'
+				),
+				'Security' => array(
+					'csrfUseOnce' => false
+				)
+			);
+		} else {
+			// 前端加载配置
+		}
+		parent::__construct($request, $response);
+	}
+
+/**
  * 控制器方法调用前回调方法
  * 
  * @return void
  */
 	public function beforeFilter() {
-		if (isset($this->request->params['admin']) && $this->request->params['admin'] == true) {
-			$this->_admin = true;
+		if ($this->_admin == true) {
+			AuthComponent::$sessionKey = 'Auth.Admin';
 			$this->_flashKey = 'Admin';
-			$this->__setAdminAuthConfig();
 			$this->layout = 'Admin/default';
 			$this->helpers = array_merge($this->helpers, array('Admin'));
 		} else {
-			$this->__setFrontAuthConfig();
 			$this->layout = 'Front/default';
 		}
 	}
@@ -90,9 +131,13 @@ class AppController extends Controller {
 		$this->set('controllerTitle', $this->controllerTitle);
 		$this->set('actionTitle', $this->actionTitle);
 		if ($this->_admin == true) {
-			$this->__setAdminBeforeRender();
+			// 管理端
+			if ($this->Auth->loggedIn()) {
+				$this->loadModel('Menu');
+				$this->set('sideBarMenus', $this->Menu->getLeftSidebarMenus());
+			}
 		} else {
-			$this->__setFrontBeforeRender();
+			// 前端
 		}
 	}
 
@@ -152,57 +197,5 @@ class AppController extends Controller {
  */
 	protected function _showWarningMessage($message, $params = array()) {
 		$this->_showFlashMessage($message, 'warning', $params);
-	}
-
-/**
- * 管理端Auth配置
- * 
- * @return void
- */
-	private function __setAdminAuthConfig() {
-		AuthComponent::$sessionKey = 'Auth.Admin';
-		$this->Auth->authenticate = array(
-			'Form' => array(
-				'userModel' => 'User',
-				'contain' => false,
-				'fields' => array('username' => 'email'),
-				'scope' => null,
-				'passwordHasher' => array(
-					'className' => 'Simple',
-					'hashType' => 'sha256'
-				)
-			)
-		);
-		$this->Auth->loginAction = array('controller' => 'users', 'action' => 'login', 'admin' => true);
-		$this->Auth->loginRedirect = array('controller' => 'dashboard', 'action' => 'index', 'admin' => true);
-		$this->Auth->flash = array('element' => 'Admin/Flash/warning', 'key' => 'Admin');
-		$this->Auth->authError = '无权访问该页面！';
-	}
-
-/**
- * 管理端模板加载前
- * 
- * @return void
- */
-	private function __setAdminBeforeRender() {
-		$this->set('sideMenus', array());
-	}
-
-/**
- * 前端Auth配置
- * 
- * @return void
- */
-	private function __setFrontAuthConfig() {
-		AuthComponent::$sessionKey = 'Auth.Front';
-		$this->Auth->allow();
-	}
-
-/**
- * 前端模板加载前
- * 
- * @return void
- */
-	private function __setFrontBeforeRender() {
 	}
 }

@@ -10,6 +10,16 @@ App::uses('AppController', 'Controller');
  */
 class DashboardController extends AppController {
 
+/**
+ * 加载模型
+ * @var array
+ */
+	public $uses = array();
+
+/**
+ * 主标题
+ * @var string
+ */
 	public $controllerTitle = '控制面板';
 
 /**
@@ -18,5 +28,25 @@ class DashboardController extends AppController {
  * @return void
  */
 	public function admin_index() {
+		if (Configure::read('debug') > 0) {
+			$this->__initMenuDB();
+		}
+	}
+
+/**
+ * 初始化菜单
+ * 
+ * @return void
+ */
+	private function __initMenuDB() {
+		if ($this->request->is('get') && $this->request->query('init') == 'menu' ) {
+			$this->loadModel('Menu');
+			if ($this->Menu->initDB()) {
+				$this->_showSuccessMessage('初始化菜单成功！');
+			} else {
+				$this->_showErrorMessage('初始化菜单失败！');
+			}
+			return $this->redirect(array('action' => 'index', 'admin' => true));
+		}
 	}
 }

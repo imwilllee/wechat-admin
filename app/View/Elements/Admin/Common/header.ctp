@@ -1,5 +1,5 @@
         <header class="header">
-            <?php echo $this->Html->link('LeeAdmin', ['controller' => 'Dashboard', 'action' => 'index', 'admin' => true], ['class' => 'logo']); ?>
+            <?php echo $this->Html->link(Configure::read('WeChat.name'), ['controller' => 'dashboard', 'action' => 'index', 'admin' => true], ['class' => 'logo']); ?>
 
             <nav class="navbar navbar-static-top" role="navigation">
                 <a href="javascript:;" class="navbar-btn sidebar-toggle" data-toggle="offcanvas" role="button">
