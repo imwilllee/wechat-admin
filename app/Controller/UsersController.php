@@ -10,7 +10,17 @@ App::uses('AppController', 'Controller');
  */
 class UsersController extends AppController {
 
-	public $controllerTitle = '系统用户管理';
+/**
+ * 加载模型
+ * @var array
+ */
+	public $uses = array('User');
+
+/**
+ * 主标题
+ * @var string
+ */
+	public $controllerTitle = '管理员用户组';
 
 /**
  * 控制器方法调用前回调方法
@@ -61,13 +71,52 @@ class UsersController extends AppController {
 	}
 
 /**
- * index method
+ * 系统管理员
  *
  * @return void
  */
 	public function admin_index() {
-		$this->User->recursive = 0;
-		$this->set('users', $this->Paginator->paginate());
+		$this->actionTitle = '系统管理员';
+		$options = array(
+			'contain' => array('Group'),
+			'conditions' => $this->__makeConditions(),
+			'order' => array('User.updated' => 'DESC', 'User.id' => 'ASC')
+		);
+		$this->Paginator->settings = array_merge($this->paginate, $options);
+		$users = $this->Paginator->paginate('User');
+		$groups = $this->User->Group->find('list');
+		$this->set(compact('users', 'groups'));
+	}
+
+/**
+ * 检索条件组合
+ * 
+ * @return array
+ */
+	private function __makeConditions() {
+		App::uses('Validation', 'Utility');
+		$conditions = array();
+		if ($this->request->is('post')) {
+			$this->request->query = $this->request->data['User'];
+		} else {
+			$this->request->data['User'] = $this->request->query;
+		}
+		if (isset($this->request->query['username']) && Validation::notEmpty($this->request->query['username'])) {
+			$conditions['User.username'] = $this->request->query['username'];
+		}
+		if (isset($this->request->query['email']) && Validation::notEmpty($this->request->query['email'])) {
+			$conditions['User.email'] = $this->request->query['email'];
+		}
+		if (isset($this->request->query['mobile']) && Validation::notEmpty($this->request->query['mobile'])) {
+			$conditions['User.mobile'] = $this->request->query['mobile'];
+		}
+		if (isset($this->request->query['group_id']) && Validation::notEmpty($this->request->query['group_id'])) {
+			$conditions['User.group_id'] = $this->request->query['group_id'];
+		}
+		if (!empty($this->request->query['is_active'])) {
+			$conditions['User.is_active'] = $this->request->query['is_active'];
+		}
+		return $conditions;
 	}
 
 /**

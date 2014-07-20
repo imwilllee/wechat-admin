@@ -14,21 +14,20 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="glyphicon glyphicon-user"></i>
                                 <?php
-                                        $loginUser = $this->Session->read('Auth.Admin');
-                                        $showName = $loginUser['alias_name'];
+                                        $showName = $this->Session->read('Auth.Admin.alias_name');
                                         if (is_null($showName) || $showName == '') {
-                                            $showName = $loginUser['username'];
+                                            $showName = $this->Session->read('Auth.Admin.username');
                                         }
                                 ?>
                                 <span><?php echo h($showName); ?> <i class="caret"></i></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li class="user-header bg-light-blue">
-                                    <?php echo $this->Admin->showUserAvatar($loginUser['avatar'], ['class' => 'img-circle', 'alt' => $loginUser['alias_name']]); ?>
+                                    <?php echo $this->Admin->showUserAvatar($this->Session->read('Auth.Admin.avatar'), array('class' => 'img-circle', 'alt' => $showName)); ?>
                                     <p>
-                                        <?php echo h($loginUser['alias_name']); ?> - 系统管理员
-                                        <small>用户名：<?php echo $loginUser['username']; ?></small>
-                                        <small>邮箱：<?php echo $loginUser['email']; ?></small>
+                                        <?php echo h($this->Session->read('Auth.Admin.alias_name')); ?> - <?php echo h($this->Session->read('Auth.Admin.Group.name')); ?>
+                                        <small>用户名：<?php echo $this->Session->read('Auth.Admin.username'); ?></small>
+                                        <small>邮箱：<?php echo $this->Session->read('Auth.Admin.email'); ?></small>
                                     </p>
                                 </li>
 

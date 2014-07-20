@@ -1,86 +1,138 @@
-<div class="users index">
-	<h2><?php echo __('Users'); ?></h2>
-	<table cellpadding="0" cellspacing="0">
-	<thead>
-	<tr>
-			<th><?php echo $this->Paginator->sort('id'); ?></th>
-			<th><?php echo $this->Paginator->sort('email'); ?></th>
-			<th><?php echo $this->Paginator->sort('username'); ?></th>
-			<th><?php echo $this->Paginator->sort('password'); ?></th>
-			<th><?php echo $this->Paginator->sort('group_id'); ?></th>
-			<th><?php echo $this->Paginator->sort('is_active'); ?></th>
-			<th><?php echo $this->Paginator->sort('mobile'); ?></th>
-			<th><?php echo $this->Paginator->sort('alias_name'); ?></th>
-			<th><?php echo $this->Paginator->sort('avatar'); ?></th>
-			<th><?php echo $this->Paginator->sort('sex'); ?></th>
-			<th><?php echo $this->Paginator->sort('birth'); ?></th>
-			<th><?php echo $this->Paginator->sort('last_logined'); ?></th>
-			<th><?php echo $this->Paginator->sort('last_login_ip'); ?></th>
-			<th><?php echo $this->Paginator->sort('last_user_agent'); ?></th>
-			<th><?php echo $this->Paginator->sort('secret_key'); ?></th>
-			<th><?php echo $this->Paginator->sort('secret_key_expired'); ?></th>
-			<th><?php echo $this->Paginator->sort('explain'); ?></th>
-			<th><?php echo $this->Paginator->sort('created'); ?></th>
-			<th><?php echo $this->Paginator->sort('created_by'); ?></th>
-			<th><?php echo $this->Paginator->sort('updated'); ?></th>
-			<th><?php echo $this->Paginator->sort('updated_by'); ?></th>
-			<th class="actions"><?php echo __('Actions'); ?></th>
-	</tr>
-	</thead>
-	<tbody>
-	<?php foreach ($users as $user): ?>
-	<tr>
-		<td><?php echo h($user['User']['id']); ?>&nbsp;</td>
-		<td><?php echo h($user['User']['email']); ?>&nbsp;</td>
-		<td><?php echo h($user['User']['username']); ?>&nbsp;</td>
-		<td><?php echo h($user['User']['password']); ?>&nbsp;</td>
-		<td>
-			<?php echo $this->Html->link($user['Group']['name'], array('controller' => 'groups', 'action' => 'view', $user['Group']['id'])); ?>
-		</td>
-		<td><?php echo h($user['User']['is_active']); ?>&nbsp;</td>
-		<td><?php echo h($user['User']['mobile']); ?>&nbsp;</td>
-		<td><?php echo h($user['User']['alias_name']); ?>&nbsp;</td>
-		<td><?php echo h($user['User']['avatar']); ?>&nbsp;</td>
-		<td><?php echo h($user['User']['sex']); ?>&nbsp;</td>
-		<td><?php echo h($user['User']['birth']); ?>&nbsp;</td>
-		<td><?php echo h($user['User']['last_logined']); ?>&nbsp;</td>
-		<td><?php echo h($user['User']['last_login_ip']); ?>&nbsp;</td>
-		<td><?php echo h($user['User']['last_user_agent']); ?>&nbsp;</td>
-		<td><?php echo h($user['User']['secret_key']); ?>&nbsp;</td>
-		<td><?php echo h($user['User']['secret_key_expired']); ?>&nbsp;</td>
-		<td><?php echo h($user['User']['explain']); ?>&nbsp;</td>
-		<td><?php echo h($user['User']['created']); ?>&nbsp;</td>
-		<td><?php echo h($user['User']['created_by']); ?>&nbsp;</td>
-		<td><?php echo h($user['User']['updated']); ?>&nbsp;</td>
-		<td><?php echo h($user['User']['updated_by']); ?>&nbsp;</td>
-		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $user['User']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $user['User']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $user['User']['id']), array(), __('Are you sure you want to delete # %s?', $user['User']['id'])); ?>
-		</td>
-	</tr>
+<?php
+    $breadcrumb = array(
+        array('text' => $controllerTitle),
+        array('text' => $actionTitle)
+    );
+    $this->set('breadcrumb', $breadcrumb);
+?>
+<?php echo $this->Form->create('User', array('url' => array('controller' => 'users', 'action' => 'index', 'admin' => true), 'novalidate' => true)); ?>
+                            <div class="box box-solid box-primary">
+                                <div class="box-header">
+                                    <h3 class="box-title">数据筛选</h3>
+                                    <div class="box-tools pull-right">
+                                        <button type="button" class="btn btn-primary btn-sm" data-widget="collapse" data-toggle="tooltip" data-original-title="关闭" data-placement="left"><i class="fa fa-minus fa-lg"></i></button>
+                                    </div>
+                                </div>
+                                <div class="box-body">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="row">
+                                            <div class="form-group col-xs-12 col-md-4">
+                                                <label>用户名</label>
+                                                <?php echo $this->Form->text('username', array('placeholder' => '用户名', 'class' => 'form-control')); ?>
+                                            </div>
+
+                                            <div class="form-group col-xs-12 col-md-4">
+                                                <label>邮箱</label>
+                                                <?php echo $this->Form->text('email', array('placeholder' => '邮箱', 'class' => 'form-control')); ?>
+                                            </div>
+
+                                            <div class="form-group col-xs-12 col-md-4">
+                                                <label>手机号码</label>
+                                                <?php echo $this->Form->text('mobile', array('placeholder' => '手机号码', 'class' => 'form-control')); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <div class="row">
+                                            <div class="form-group col-xs-12 col-md-4">
+                                                <label>所属用户组</label>
+                                                <?php
+                                                    echo $this->Form->select('group_id', $groups, array('empty' => '选择用户组','class' => 'form-control'));
+                                                 ?>
+                                            </div>
+                                            <div class="form-group col-xs-12 col-md-4">
+                                                <label>登陆限制</label>
+                                                <div class="input-group item-margin">
+                                                    <?php
+                                                        echo $this->Form->input(
+                                                            'is_active',
+                                                            array(
+                                                                'label' => false,
+                                                                'type' => 'select',
+                                                                'multiple' => 'checkbox',
+                                                                'options' =>Configure::read('User.active'),
+                                                                'class' => 'pull-left',
+                                                                'div' => false
+                                                            )
+                                                        );
+                                                    ?>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                </div>
+                                <div class="box-footer">
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <button type="submit" class="btn btn-primary btn-flat">筛选数据</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+<?php echo $this->Form->end(); ?>
+
+
+                            <div class="box box-primary">
+                                <div class="box-header">
+                                    <h3 class="box-title">数据一览</h3>
+                                    <div class="box-tools pull-right">
+                                        <button type="button" class="btn btn-primary btn-sm" data-widget="collapse" data-toggle="tooltip" data-original-title="关闭" data-placement="left"><i class="fa fa-minus fa-lg"></i></button>
+                                    </div>
+                                </div>
+                                <div class="box-body table-responsive">
+                                    <table class="table table-bordered table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>用户名</th>
+                                                <th>用户组</th>
+                                                <th>昵称</th>
+                                                <th>邮箱</th>
+                                                <th>登陆限制</th>
+                                                <th>最后登陆</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+<?php foreach ($users as $user): ?>
+                                            <tr>
+                                                <td><?php echo $user['User']['id']; ?></td>
+                                                <td><?php echo $this->Html->link($user['User']['username'], array('controller' => 'users', 'action' => 'view', 'admin' => true, $user['User']['id'])); ?></td>
+                                                <td><?php echo $this->Html->link($user['Group']['name'], array('controller' => 'groups', 'action' => 'view', 'admin' => true, $user['Group']['id'])); ?></td>
+                                                <td><?php echo h($user['User']['alias_name']); ?></td>
+                                                <td><?php echo $user['User']['email']; ?></td>
+                                                <td>
+                                                <?php if ($user['User']['is_active']): ?>
+                                                    <span class="label label-success"><?php echo Configure::read('User.active.1'); ?></span>
+                                                <?php else: ?>
+                                                    <span class="label label-danger"><?php echo Configure::read('User.active.0'); ?></span>
+                                                <?php endif;?>
+                                                </td>
+                                                <td><?php echo $user['User']['last_logined']; ?></td>
+                                                <td>
+                                                <?php
+                                                    echo $this->Admin->showViewIconLink(array('controller' => 'users', 'action' => 'view', 'admin' => true, $user['User']['id']));
+                                                    echo $this->Admin->showEditIconLink(array('controller' => 'users', 'action' => 'edit', 'admin' => true, $user['User']['id']));
+                                                    echo $this->Admin->showDeleteIconLink(array('controller' => 'users', 'action' => 'delete', 'admin' => true, $user['User']['id']));
+                                                ?>
+                                                </td>
+                                            </tr>
 <?php endforeach; ?>
-	</tbody>
-	</table>
-	<p>
-	<?php
-	echo $this->Paginator->counter(array(
-	'format' => __('Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')
-	));
-	?>	</p>
-	<div class="paging">
-	<?php
-		echo $this->Paginator->prev('< ' . __('previous'), array(), null, array('class' => 'prev disabled'));
-		echo $this->Paginator->numbers(array('separator' => ''));
-		echo $this->Paginator->next(__('next') . ' >', array(), null, array('class' => 'next disabled'));
-	?>
-	</div>
-</div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('New User'), array('action' => 'add')); ?></li>
-		<li><?php echo $this->Html->link(__('List Groups'), array('controller' => 'groups', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Group'), array('controller' => 'groups', 'action' => 'add')); ?> </li>
-	</ul>
-</div>
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                                <div class="box-footer">
+
+                                    <?php echo $this->element('Admin/Common/paginator'); ?>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>

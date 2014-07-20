@@ -95,4 +95,67 @@ class AdminHelper extends AppHelper {
 		$text = sprintf('<i class="%s"></i> <span>%s</span>', $class, $menu['name']);
 		return $this->Html->link($text, $url, array('escape' => false));
 	}
+
+/**
+ * 编辑按钮
+ * 
+ * @param array $url 链接
+ * @param array $options 参数
+ * @return string
+ */
+	public function showEditIconLink($url = array(), $options = array()) {
+		$opt = array(
+			'data-original-title' => '编辑'
+		);
+		$options = array_merge($opt, $options);
+		return $this->showIconLink('fa fa-pencil-square-o fa-lg', $url, $options);
+	}
+
+/**
+ * 详细按钮
+ * 
+ * @param array $url 链接
+ * @param array $options 参数
+ * @return string
+ */
+	public function showViewIconLink($url = array(), $options = array()) {
+		$opt = array(
+			'data-original-title' => '详细'
+		);
+		$options = array_merge($opt, $options);
+		return $this->showIconLink('fa fa-search-plus fa-lg', $url, $options);
+	}
+
+/**
+ * 删除按钮
+ * 
+ * @param array $url 链接
+ * @param array $options 参数
+ * @return string
+ */
+	public function showDeleteIconLink($url = array(), $options = array()) {
+		$opt = array(
+			'data-original-title' => '删除'
+		);
+		$options = array_merge($opt, $options);
+		return $this->showIconLink('fa fa-trash-o fa-lg', $url, $options);
+	}
+
+/**
+ * 显示icon按钮
+ * 
+ * @param string $icon 图标样式
+ * @param array $url 链接
+ * @param array $options 参数
+ * @return string
+ */
+	public function showIconLink($icon, $url = array(), $options = array()) {
+		$opt = array(
+			'escape' => false,
+			'data-toggle' => 'tooltip'
+		);
+		$options = array_merge($opt, $options);
+		$text = $this->Html->tag('i', '', array('class' => $icon));
+		return $this->Html->tag('div', $this->Html->link($text, $url, $options), array('class' => 'actions', 'escape' => false));
+	}
 }

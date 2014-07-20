@@ -26,5 +26,11 @@ $config = array(
 			1 => '允许'
 		),
 		'active_ok' => 1,
+	),
+/**
+ * 用户组配置项
+ */
+	'Group' => array(
+		'supper_admin_id' => 1
 	)
 );

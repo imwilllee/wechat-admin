@@ -1,7 +1,7 @@
 <?php 
-    $breadcrumb = [
-        ['text' => $controllerTitle, 'active' => true]
-    ];
+    $breadcrumb = array(
+        array('text' => $controllerTitle)
+    );
     $this->set('breadcrumb', $breadcrumb);
 ?>
                     <div class="row">

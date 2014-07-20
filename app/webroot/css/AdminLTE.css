@@ -3264,6 +3264,10 @@ fieldset[disabled] .btn-vk.active {
 .pointer {
   cursor:pointer;
 }
-.error-label{
+.error-label {
   font-weight: 100;
+}
+.actions {
+  margin-right: 10px;
+  float: left;
 }

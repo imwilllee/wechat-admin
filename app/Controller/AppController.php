@@ -79,7 +79,7 @@ class AppController extends Controller {
 					'authenticate' => array(
 						'Admin' => array(
 							'userModel' => 'User',
-							'contain' => false,
+							'contain' => array('Group'),
 							// 'fields' => array('username' => 'email'),
 							// 多字段验证 支持数组
 							'both_fields' => 'email',
