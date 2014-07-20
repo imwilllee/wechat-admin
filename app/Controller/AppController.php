@@ -114,8 +114,19 @@ class AppController extends Controller {
 		if ($this->_admin == true) {
 			AuthComponent::$sessionKey = 'Auth.Admin';
 			$this->_flashKey = 'Admin';
+			if (!$this->Auth->loggedIn()) {
+				return false;
+			}
 			$this->layout = 'Admin/default';
 			$this->helpers = array_merge($this->helpers, array('Admin'));
+			if (!$this->__checkUserAccess()) {
+				$this->response->statusCode(403);
+				$this->_showErrorMessage('该账号无权访问该页面！');
+				// $this->render('/Errors/Admin/error400');
+				// $this->response->send();
+				// $this->_stop();
+				return false;
+			}
 		} else {
 			$this->layout = 'Front/default';
 		}
@@ -197,5 +208,29 @@ class AppController extends Controller {
  */
 	protected function _showWarningMessage($message, $params = array()) {
 		$this->_showFlashMessage($message, 'warning', $params);
+	}
+
+/**
+ * 检查用户访问权限
+ * 
+ * @return boolean
+ */
+	private function __checkUserAccess() {
+		if ($this->Session->read('Auth.Admin.group_id') != Configure::read('Group.supper_admin_id')) {
+			$prefix = $this->request->params['prefix'];
+			$plugin = $this->request->params['plugin'];
+			$controller = $this->request->params['controller'];
+			$find = $prefix . '_';
+			$action = str_replace($find, '', $this->request->params['action']);
+			$path = $prefix . '/';
+			if (!empty($plugin)) {
+				$path .= $plugin . '/';
+			}
+			$path .= $controller . '/' . $action;
+			if (!in_array($path, $this->Session->read('Auth.Admin.Access'))) {
+				return false;
+			}
+		}
+		return true;
 	}
 }

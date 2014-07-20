@@ -50,14 +50,49 @@ class UsersController extends AppController {
 			if (empty($user)) {
 				$this->_showErrorMessage('账号或密码错误！');
 			} else {
-				if ($user['is_active'] == Configure::read('User.active_ok')) {
+				if ($user['is_active'] == Configure::read('User.active_ok') &&
+					$user['Group']['is_active'] == Configure::read('Group.active_ok')) {
 					if ($this->Auth->login($user)) {
+						$this->__updateLoginInfo($user['id']);
+						$this->__setUserAccess($user['group_id']);
 						return $this->redirect($this->Auth->redirect());
 					}
 				} else {
 					$this->_showErrorMessage('该账号已被停用！');
 				}
 			}
+		}
+	}
+
+/**
+ * 更新用户登陆信息
+ *
+ * @param integer $uid 用户信息
+ * @return boolean
+ */
+	private function __updateLoginInfo($uid) {
+		$this->User->id = $uid;
+		$data = array(
+			'last_logined' => date('Y-m-d H:i:s'),
+			'last_login_ip' => $this->request->clientIp(),
+			'last_user_agent' => env('HTTP_USER_AGENT')
+		);
+		$this->Session->write('Auth.Admin.logined', $data['last_logined']);
+		$this->Session->write('Auth.Admin.login_ip', $data['last_login_ip']);
+		$this->Session->write('Auth.Admin.user_agent', $data['last_user_agent']);
+		return $this->User->save($data);
+	}
+
+/**
+ * 设置用户访问权限
+ *
+ * @param integer $groupId 用户组ID
+ * @return void
+ */
+	private function __setUserAccess($groupId) {
+		if ($groupId !== Configure::read('Group.super_admin_id')) {
+			$this->loadModel('GroupAccess');
+			$this->Session->write('Auth.Admin.Access', $this->GroupAccess->getUserGroupAccess($groupId));
 		}
 	}
 

@@ -25,12 +25,13 @@ $config = array(
 			0 => '禁止',
 			1 => '允许'
 		),
-		'active_ok' => 1,
+		'active_ok' => 1
 	),
 /**
  * 用户组配置项
  */
 	'Group' => array(
-		'supper_admin_id' => 1
+		'supper_admin_id' => 1,
+		'active_ok' => 1
 	)
 );

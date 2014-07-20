@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('CakeSession', 'Model/Datasource');
 /**
  * menus表模型
  *
@@ -138,6 +139,8 @@ class Menu extends AppModel {
 			}
 		}
 		$this->commit();
+		Cache::delete('cache_admin_menus');
+		Cache::delete('cache_admin_has_menus');
 		return true;
 	}
 
@@ -158,27 +161,57 @@ class Menu extends AppModel {
 			'order' => array('Menu.rank' => 'ASC'),
 			'contain' => false
 		);
-		$menus = $this->find('all', $options);
+		$supperAdmin = CakeSession::read('Auth.Admin.group_id') == Configure::read('Group.supper_admin_id') ? true : false;
+
+		$access = CakeSession::read('Auth.Admin.Access');
+		$menus = Cache::read('cache_admin_menus');
+		if (empty($menus)) {
+			$menus = $this->find('all', $options);
+			Cache::write('cache_admin_menus', $menus);
+		}
 		foreach ($menus as $menu) {
+			if ($supperAdmin == false) {
+				if (!empty($menu['Menu']['link'])) {
+					if (!in_array($menu['Menu']['link'], $access)) {
+						continue;
+					}
+				}
+			}
 			$menu['Menu']['has_menus'] = array();
 			$sideBarMenus[$menu['Menu']['menu_code']] = $menu['Menu'];
 		}
 		unset($menus);
 		if (!empty($sideBarMenus)) {
-			$options['conditions'] = array(
-				'Menu.display_flg' => true,
-				'Menu.menu_code IS NULL',
-				'Menu.parent_code IS NOT NULL'
-			);
-			$options['order'] = array('Menu.parent_code' => 'ASC', 'Menu.rank' => 'ASC');
-			$hasMenus = $this->find('all', $options);
+			$hasMenus = Cache::read('cache_admin_has_menus');
+			if (empty($hasMenus)) {
+				$options['conditions'] = array(
+					'Menu.display_flg' => true,
+					'Menu.menu_code IS NULL',
+					'Menu.parent_code IS NOT NULL'
+				);
+				$options['order'] = array('Menu.parent_code' => 'ASC', 'Menu.rank' => 'ASC');
+				$hasMenus = $this->find('all', $options);
+				Cache::write('cache_admin_has_menus', $hasMenus);
+			}
+
 			foreach ($hasMenus as $key) {
+				if ($supperAdmin == false) {
+					if (!empty($key['Menu']['link'])) {
+						if (!in_array($key['Menu']['link'], $access)) {
+							continue;
+						}
+					}
+				}
 				if (isset($sideBarMenus[$key['Menu']['parent_code']])) {
 					$sideBarMenus[$key['Menu']['parent_code']]['has_menus'][] = $key['Menu'];
+				} else {
+					$sideBarMenus[$key['Menu']['parent_code']] = $key['Menu'];
+					$sideBarMenus[$key['Menu']['parent_code']]['has_menus'] = array();
 				}
 			}
 			unset($hasMenus);
 		}
+		unset($options);
 		return $sideBarMenus;
 	}
 }

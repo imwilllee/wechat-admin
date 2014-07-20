@@ -11,11 +11,10 @@ App::uses('AppController', 'Controller');
 class GroupsController extends AppController {
 
 /**
- * Components
- *
- * @var array
+ * 主标题
+ * @var string
  */
-	public $components = array('Paginator');
+	public $controllerTitle = '管理员用户组';
 
 /**
  * index method

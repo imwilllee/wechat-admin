@@ -5,7 +5,7 @@
             <a href="javascript:;">
                 <?php
                 echo $this->Paginator->counter(array(
-                'format' => __('<small>共{:pages}页{:count}条记录</small>')
+                    'format' => '<small>共{:pages}页{:count}条记录</small>'
                 ));
                 ?>
             </a>
