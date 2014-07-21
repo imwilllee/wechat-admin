@@ -180,7 +180,7 @@ $(function() {
         }
     }
 
-    if ($("[quicksave='on']").size() > 0) {
+    if ($("[shortcut='on']").size() > 0) {
         var submit = $("<div />").css({
             "display": "none",
             "position": "fixed",
@@ -196,7 +196,7 @@ $(function() {
         }).html("<i class='fa fa-save fa-lg'></i>").addClass("no-print").attr("id", "shortcuts-submit");;
         submit.click(function(e) {
             e.preventDefault();
-            $("[quicksave='on']").eq(0).submit();
+            $("[shortcut='on']").eq(0).submit();
         });
 
         $("body").append(submit);

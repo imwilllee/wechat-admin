@@ -25,13 +25,18 @@ $config = array(
 			0 => '禁止',
 			1 => '允许'
 		),
-		'active_ok' => 1
+		'active_ok' => 1,
+		'sex' => array(
+			0 => '保密',
+			1 => '男性',
+			2 => '女性'
+		)
 	),
 /**
  * 用户组配置项
  */
 	'Group' => array(
-		'supper_admin_id' => 1,
+		'supper_id' => 1,
 		'active_ok' => 1
 	)
 );

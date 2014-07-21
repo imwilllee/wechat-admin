@@ -3271,3 +3271,14 @@ fieldset[disabled] .btn-vk.active {
   margin-right: 10px;
   float: left;
 }
+.required label:first-child:after {
+  color: #e32;
+  content: "*";
+  display:inline;
+}
+.item-margin label {
+  font-weight: 100;
+}
+.show-line .form-group {
+  border-bottom: 1px solid #EEE;
+}

@@ -216,7 +216,7 @@ class AppController extends Controller {
  * @return boolean
  */
 	private function __checkUserAccess() {
-		if ($this->Session->read('Auth.Admin.group_id') != Configure::read('Group.supper_admin_id')) {
+		if ($this->Session->read('Auth.Admin.group_id') != Configure::read('Group.supper_id')) {
 			$prefix = $this->request->params['prefix'];
 			$plugin = $this->request->params['plugin'];
 			$controller = $this->request->params['controller'];

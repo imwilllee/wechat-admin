@@ -48,7 +48,7 @@ class UsersController extends AppController {
 		if ($this->request->is('post')) {
 			$user = $this->Auth->identify($this->request, $this->response);
 			if (empty($user)) {
-				$this->_showErrorMessage('账号或密码错误！');
+				$this->_showErrorMessage('登录账号或密码错误！');
 			} else {
 				if ($user['is_active'] == Configure::read('User.active_ok') &&
 					$user['Group']['is_active'] == Configure::read('Group.active_ok')) {
@@ -58,7 +58,7 @@ class UsersController extends AppController {
 						return $this->redirect($this->Auth->redirect());
 					}
 				} else {
-					$this->_showErrorMessage('该账号已被停用！');
+					$this->_showErrorMessage('该账号已被限制登录！');
 				}
 			}
 		}
@@ -71,16 +71,18 @@ class UsersController extends AppController {
  * @return boolean
  */
 	private function __updateLoginInfo($uid) {
-		$this->User->id = $uid;
 		$data = array(
+			'id' => $uid,
 			'last_logined' => date('Y-m-d H:i:s'),
 			'last_login_ip' => $this->request->clientIp(),
-			'last_user_agent' => env('HTTP_USER_AGENT')
+			'last_user_agent' => env('HTTP_USER_AGENT'),
+			'updated' => false,
+			'updated_by' => false
 		);
 		$this->Session->write('Auth.Admin.logined', $data['last_logined']);
 		$this->Session->write('Auth.Admin.login_ip', $data['last_login_ip']);
 		$this->Session->write('Auth.Admin.user_agent', $data['last_user_agent']);
-		return $this->User->save($data);
+		return $this->User->save($data, array('validate' => false));
 	}
 
 /**
@@ -90,7 +92,7 @@ class UsersController extends AppController {
  * @return void
  */
 	private function __setUserAccess($groupId) {
-		if ($groupId !== Configure::read('Group.super_admin_id')) {
+		if ($groupId !== Configure::read('Group.supper_id')) {
 			$this->loadModel('GroupAccess');
 			$this->Session->write('Auth.Admin.Access', $this->GroupAccess->getUserGroupAccess($groupId));
 		}
@@ -155,36 +157,41 @@ class UsersController extends AppController {
 	}
 
 /**
- * view method
+ * 管理员详细
  *
  * @param string $id ID
  * @throws NotFoundException
  * @return void
  */
 	public function admin_view($id = null) {
+		$this->actionTitle = '管理员详细';
 		if (is_null($id)) {
 			$id = $this->Session->read('Auth.Admin.id');
 		}
 		if (!$this->User->exists($id)) {
-			throw new NotFoundException(__('Invalid user'));
+			throw new NotFoundException('用户信息不存在！');
 		}
-		$options = array('conditions' => array('User.' . $this->User->primaryKey => $id));
+		$options = array(
+			'conditions' => array('User.id' => $id),
+			'contain' => array('Group')
+		);
 		$this->set('user', $this->User->find('first', $options));
 	}
 
 /**
- * add method
+ * 创建管理员
  *
  * @return void
  */
 	public function admin_add() {
+		$this->actionTitle = '创建管理员';
 		if ($this->request->is('post')) {
 			$this->User->create();
-			if ($this->User->save($this->request->data)) {
-				$this->Session->setFlash(__('The user has been saved.'));
-				return $this->redirect(array('action' => 'index'));
+			if ($this->User->save($this->request->data, array('validateRule' => 'default'))) {
+				$this->_showSuccessMessage('数据保存成功！');
+				return $this->redirect(array('controller' => 'users', 'action' => 'index', 'admin' => true));
 			} else {
-				$this->Session->setFlash(__('The user could not be saved. Please, try again.'));
+				$this->_showErrorMessage('数据保存失败！请根据错误提示修正。');
 			}
 		}
 		$groups = $this->User->Group->find('list');
@@ -192,27 +199,31 @@ class UsersController extends AppController {
 	}
 
 /**
- * edit method
+ * 管理员编辑
  *
  * @param string $id ID
  * @throws NotFoundException
  * @return void
  */
 	public function admin_edit($id = null) {
-		if (!$this->User->exists($id)) {
-			throw new NotFoundException(__('Invalid user'));
+		$options = array('conditions' => array('User.id' => $id), 'contain' => false);
+		$user = !empty($id) ? $this->User->find('first', $options) : null;
+		if (empty($user)) {
+			throw new NotFoundException('用户信息不存在！');
 		}
 		if ($this->request->is(array('post', 'put'))) {
 			if ($this->User->save($this->request->data)) {
-				$this->Session->setFlash(__('The user has been saved.'));
-				return $this->redirect(array('action' => 'index'));
+				$this->_showSuccessMessage('数据保存成功！');
+				return $this->redirect(array('controller' => 'users', 'action' => 'index', 'admin' => true));
 			} else {
-				$this->Session->setFlash(__('The user could not be saved. Please, try again.'));
+				$this->request->data['User'] = array_merge($user['User'], $this->request->data['User']);
+				$this->_showErrorMessage('数据保存失败！请根据错误提示修正。');
 			}
 		} else {
-			$options = array('conditions' => array('User.' . $this->User->primaryKey => $id));
-			$this->request->data = $this->User->find('first', $options);
+			$options = array('conditions' => array('User.id' => $id), 'contain' => false);
+			$this->request->data = $user;
 		}
+		unset($user);
 		$groups = $this->User->Group->find('list');
 		$this->set(compact('groups'));
 	}

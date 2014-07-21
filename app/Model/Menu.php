@@ -161,7 +161,7 @@ class Menu extends AppModel {
 			'order' => array('Menu.rank' => 'ASC'),
 			'contain' => false
 		);
-		$supperAdmin = CakeSession::read('Auth.Admin.group_id') == Configure::read('Group.supper_admin_id') ? true : false;
+		$supperAdmin = CakeSession::read('Auth.Admin.group_id') == Configure::read('Group.supper_id') ? true : false;
 
 		$access = CakeSession::read('Auth.Admin.Access');
 		$menus = Cache::read('cache_admin_menus');

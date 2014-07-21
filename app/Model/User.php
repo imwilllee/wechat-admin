@@ -26,6 +26,158 @@ class User extends AppModel {
 	);
 
 /**
+ * 默认验证规则
+ *
+ * @param array $options 参数
+ * @return void
+ */
+	public function validateDefault($options = array()) {
+		$groups = array_keys($this->Group->find('list'));
+		$this->validator()
+			->add('username', array(
+				'required' => array(
+					'rule' => 'notEmpty',
+					'required' => 'create',
+					'message' => '用户名必须填写！',
+					'last' => true
+				),
+				'custom' => array(
+					'rule' => '/^[a-z0-9]{6,12}$/i',
+					'message' => '用户名格式错误！',
+					'last' => false
+				),
+				'unique' => array(
+					'rule' => 'isUnique',
+					'message' => '该用户名已存在！',
+					'last' => false
+				)
+			))
+			->add('email', array(
+				'required' => array(
+					'rule' => 'notEmpty',
+					'required' => 'create',
+					'message' => '邮箱必须填写！',
+					'last' => true
+				),
+				'email' => array(
+					'rule' => 'email',
+					'message' => '邮箱格式错误！',
+					'last' => false
+				),
+				'maxLength' => array(
+					'rule' => array('maxLength', 32),
+					'message' => '邮箱长度长度超出限制！',
+					'last' => false
+				),
+				'unique' => array(
+					'rule' => 'isUnique',
+					'message' => '该邮箱已存在！',
+					'last' => false
+				)
+			))
+			->add('password', array(
+				'required' => array(
+					'rule' => 'notEmpty',
+					'required' => 'create',
+					'message' => '密码必须填写！',
+					'last' => true
+				),
+				'custom' => array(
+					'rule' => '/^[_0-9a-zA-Z]{6,32}$/i',
+					'message' => '密码格式错误！',
+					'last' => false
+				)
+			))
+			->add('confirm_password', array(
+				'required' => array(
+					'rule' => 'notEmpty',
+					'required' => 'create',
+					'message' => '确认密码必须填写！',
+					'last' => true
+				),
+				'confirm' => array(
+					'rule' => array('confirm', 'password'),
+					'message' => '两次密码输入不一致！',
+					'last' => false
+				)
+			))
+			->add('group_id', array(
+				'required' => array(
+					'rule' => 'notEmpty',
+					'required' => 'create',
+					'message' => '请选择一个用户组！',
+					'last' => true
+				),
+				'inList' => array(
+					'rule' => array('inList', $groups),
+					'message' => '所属用户组选择错误！',
+					'last' => false
+				)
+			))
+			->add('is_active', array(
+				'required' => array(
+					'rule' => 'notEmpty',
+					'required' => 'create',
+					'message' => '登陆限制必须选择！',
+					'last' => true
+				),
+				'boolean' => array(
+					'rule' => 'boolean',
+					'message' => '登陆限制选择错误！',
+					'last' => false
+				)
+			))
+			->add('alias_name', array(
+				'maxLength' => array(
+					'rule' => array('maxLength', 18),
+					'message' => '用户昵称长度超出限制！',
+					'allowEmpty' => true,
+					'last' => false
+				)
+			))
+			->add('mobile', array(
+				'custom' => array(
+					'rule' => '/^[_0-9]{11}$/i',
+					'message' => '手机号码格式错误！',
+					'allowEmpty' => true,
+					'last' => false
+				)
+			))
+			->add('birth', array(
+				'checkDateTimeFormat' => array(
+					'rule' => array('checkDateTimeFormat', 'Y-m-d'),
+					'message' => '出生年月格式错误！',
+					'allowEmpty' => true,
+					'last' => false
+				)
+			))
+			->add('sex', array(
+				'inList' => array(
+					'rule' => array('inList', array_keys(Configure::read('User.sex'))),
+					'message' => '性别选择项目错误！',
+					'allowEmpty' => true,
+					'last' => false
+				)
+			))
+			->add('explain', array(
+				'maxLength' => array(
+					'rule' => array('maxLength', 500),
+					'message' => '备注说明长度超出限制！',
+					'allowEmpty' => true,
+					'last' => false
+				)
+			))
+			->add('avatar', array(
+				'maxLength' => array(
+					'rule' => array('maxLength', 500),
+					'message' => '头像路径长度超出限制！',
+					'allowEmpty' => true,
+					'last' => false
+				)
+			));
+	}
+
+/**
  * 数据保存前回调方法
  * 
  * @param array $options 参数
@@ -38,5 +190,6 @@ class User extends AppModel {
 		} else {
 			unset($this->data['User']['password']);
 		}
+		parent::beforeSave($options);
 	}
 }

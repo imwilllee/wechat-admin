@@ -99,7 +99,7 @@ class AdminHelper extends AppHelper {
 /**
  * 编辑按钮
  * 
- * @param array $url 链接
+ * @param array $url url数组
  * @param array $options 参数
  * @return string
  */
@@ -114,7 +114,7 @@ class AdminHelper extends AppHelper {
 /**
  * 详细按钮
  * 
- * @param array $url 链接
+ * @param array $url url数组
  * @param array $options 参数
  * @return string
  */
@@ -129,7 +129,7 @@ class AdminHelper extends AppHelper {
 /**
  * 删除按钮
  * 
- * @param array $url 链接
+ * @param array $url url数组
  * @param array $options 参数
  * @return string
  */
@@ -145,7 +145,7 @@ class AdminHelper extends AppHelper {
  * 显示icon按钮
  * 
  * @param string $icon 图标样式
- * @param array $url 链接
+ * @param array $url url数组
  * @param array $options 参数
  * @return string
  */
@@ -157,5 +157,82 @@ class AdminHelper extends AppHelper {
 		$options = array_merge($opt, $options);
 		$text = $this->Html->tag('i', '', array('class' => $icon));
 		return $this->Html->tag('div', $this->Html->link($text, $url, $options), array('class' => 'actions', 'escape' => false));
+	}
+
+/**
+ * 表单字段验证错误信息
+ * 
+ * @param string $field 字段
+ * @return string
+ */
+	public function error($field) {
+		if ($this->Form->isFieldError($field)) {
+			return $this->Form->error($field, null, array('wrap' => 'label', 'class' => 'error-label'));
+		}
+		return null;
+	}
+
+/**
+ * 错误样式
+ * 
+ * @param string $field 字段
+ * @return string
+ */
+	public function errorClass($field) {
+		if ($this->Form->isFieldError($field)) {
+			return ' has-error';
+		}
+		return null;
+	}
+
+/**
+ * 返回icon按钮
+ * 
+ * @param array $url url数组
+ * @return string
+ */
+	public function showNavBackwardLink($url) {
+		return $this->Html->link(
+			'<i class="fa fa-backward"></i> 返回',
+			$url,
+			array(
+				'class' => 'btn btn-default',
+				'escape' => false
+			)
+		);
+	}
+
+/**
+ * 编辑icon按钮
+ * 
+ * @param array $url url数组
+ * @return string
+ */
+	public function showNavEditLink($url) {
+		return $this->Html->link(
+			'<i class="fa fa-pencil-square-o"></i> 编辑',
+			$url,
+			array(
+				'class' => 'btn btn-primary',
+				'escape' => false
+			)
+		);
+	}
+
+/**
+ * 删除icon按钮
+ * 
+ * @param array $url url数组
+ * @return string
+ */
+	public function showNavDeleteLink($url) {
+		return $this->Html->link(
+			'<i class="fa fa-trash-o"></i> 删除',
+			$url,
+			array(
+				'class' => 'btn btn-danger',
+				'escape' => false
+			)
+		);
 	}
 }

@@ -8,7 +8,7 @@
                                                         $url = env('HTTP_REFERER');
                                                     }
                                                     if (!empty($url)) {
-                                                        echo $this->Html->link('<i class="fa fa-backward"></i> 返回', $url, ['class' => 'btn btn-default btn-flat', 'escape' => false] );
+                                                        echo $this->Html->link('<i class="fa fa-backward"></i> 返回', $url, array('class' => 'btn btn-default btn-flat', 'escape' => false));
                                                     }
                                                 ?>
                                             </div>
