@@ -36,17 +36,20 @@ class User extends AppModel {
 		$this->validator()
 			->add('username', array(
 				'required' => array(
-					'rule' => 'notEmpty',
+					'on' => 'create',
 					'required' => 'create',
+					'rule' => 'notEmpty',
 					'message' => '用户名必须填写！',
 					'last' => true
 				),
 				'custom' => array(
+					'on' => 'create',
 					'rule' => '/^[a-z0-9]{6,12}$/i',
 					'message' => '用户名格式错误！',
 					'last' => false
 				),
 				'unique' => array(
+					'on' => 'create',
 					'rule' => 'isUnique',
 					'message' => '该用户名已存在！',
 					'last' => false
@@ -55,7 +58,7 @@ class User extends AppModel {
 			->add('email', array(
 				'required' => array(
 					'rule' => 'notEmpty',
-					'required' => 'create',
+					'required' => true,
 					'message' => '邮箱必须填写！',
 					'last' => true
 				),
@@ -77,25 +80,32 @@ class User extends AppModel {
 			))
 			->add('password', array(
 				'required' => array(
-					'rule' => 'notEmpty',
+					// 创建的时候规则生效(当不设置on或者on=null的时候两者都生效)
+					'on' => 'create',
+					// 项目必须存在
 					'required' => 'create',
+					// 值不能为空
+					'rule' => 'notEmpty',
 					'message' => '密码必须填写！',
 					'last' => true
 				),
 				'custom' => array(
 					'rule' => '/^[_0-9a-zA-Z]{6,32}$/i',
 					'message' => '密码格式错误！',
+					'allowEmpty' => true,
 					'last' => false
 				)
 			))
 			->add('confirm_password', array(
 				'required' => array(
-					'rule' => 'notEmpty',
+					'on' => 'create',
 					'required' => 'create',
+					'rule' => 'notEmpty',
 					'message' => '确认密码必须填写！',
 					'last' => true
 				),
 				'confirm' => array(
+					'on' => 'create',
 					'rule' => array('confirm', 'password'),
 					'message' => '两次密码输入不一致！',
 					'last' => false
@@ -103,8 +113,8 @@ class User extends AppModel {
 			))
 			->add('group_id', array(
 				'required' => array(
+					'required' => true,
 					'rule' => 'notEmpty',
-					'required' => 'create',
 					'message' => '请选择一个用户组！',
 					'last' => true
 				),
@@ -116,8 +126,8 @@ class User extends AppModel {
 			))
 			->add('is_active', array(
 				'required' => array(
+					'required' => true,
 					'rule' => 'notEmpty',
-					'required' => 'create',
 					'message' => '登陆限制必须选择！',
 					'last' => true
 				),

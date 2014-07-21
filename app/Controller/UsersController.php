@@ -221,6 +221,7 @@ class UsersController extends AppController {
 			}
 		} else {
 			$options = array('conditions' => array('User.id' => $id), 'contain' => false);
+			unset($user['User']['password']);
 			$this->request->data = $user;
 		}
 		unset($user);

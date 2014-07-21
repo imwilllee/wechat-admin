@@ -52,7 +52,7 @@
                                                         <div class="form-group<?php echo $this->Admin->errorClass('password'); ?>">
                                                             <label>密码</label>
                                                             <div class="input-group col-xs-12 col-md-6">
-                                                            <?php echo $this->Form->password('password', array('placeholder' => '密码', 'class' => 'form-control', 'value' => false)); ?>
+                                                            <?php echo $this->Form->password('password', array('placeholder' => '密码', 'class' => 'form-control')); ?>
                                                             <span class="text-light-blue">如果填写该项目，则会修改密码为填写值。</span>
                                                             </div>
                                                             <?php echo $this->Admin->error('password'); ?>
