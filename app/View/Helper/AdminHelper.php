@@ -196,7 +196,7 @@ class AdminHelper extends AppHelper {
 			'<i class="fa fa-backward"></i> 返回',
 			$url,
 			array(
-				'class' => 'btn btn-default',
+				'class' => 'btn btn-default btn-flat',
 				'escape' => false
 			)
 		);
@@ -213,7 +213,7 @@ class AdminHelper extends AppHelper {
 			'<i class="fa fa-pencil-square-o"></i> 编辑',
 			$url,
 			array(
-				'class' => 'btn btn-primary',
+				'class' => 'btn btn-primary btn-flat',
 				'escape' => false
 			)
 		);
@@ -230,7 +230,7 @@ class AdminHelper extends AppHelper {
 			'<i class="fa fa-trash-o"></i> 删除',
 			$url,
 			array(
-				'class' => 'btn btn-danger',
+				'class' => 'btn btn-danger btn-flat',
 				'escape' => false
 			)
 		);

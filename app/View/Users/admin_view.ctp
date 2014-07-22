@@ -166,33 +166,35 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-xs-12">
-                                                <div class="btn-group">
-                                                    <?php 
-                                                    echo $this->Admin->showNavEditLink(
-                                                        array(
-                                                            'controller' => 'users',
-                                                            'action' => 'edit',
-                                                            'admin' => true,
-                                                            $user['User']['id']
-                                                        )
-                                                    );
-                                                    echo $this->Admin->showNavDeleteLink(
-                                                        array(
-                                                            'controller' => 'users',
-                                                            'action' => 'delete',
-                                                            'admin' => true,
-                                                            $user['User']['id']
-                                                        )
-                                                    );
-                                                    echo $this->Admin->showNavBackwardLink(
-                                                        array(
-                                                            'controller' => 'users',
-                                                            'action' => 'index',
-                                                            'admin' => true
-                                                        )
-                                                    );
+                                                    <?php
+                                                        echo $this->Admin->showNavEditLink(
+                                                            array(
+                                                                'controller' => 'users',
+                                                                'action' => 'edit',
+                                                                'admin' => true,
+                                                                $user['User']['id']
+                                                            )
+                                                        );
                                                     ?>
-                                                </div>
+                                                    <?php
+                                                        echo $this->Admin->showNavDeleteLink(
+                                                            array(
+                                                                'controller' => 'users',
+                                                                'action' => 'delete',
+                                                                'admin' => true,
+                                                                $user['User']['id']
+                                                            )
+                                                        );
+                                                    ?>
+                                                    <?php
+                                                        echo $this->Admin->showNavBackwardLink(
+                                                            array(
+                                                                'controller' => 'users',
+                                                                'action' => 'index',
+                                                                'admin' => true
+                                                            )
+                                                        );
+                                                    ?>
                                             </div>
                                         </div>
 
