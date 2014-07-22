@@ -17,12 +17,9 @@
 
                                         <div class="row">
                                             <div class="col-xs-12">
-                                                <div class="box box-solid box-danger">
+                                                <div class="box box-solid box-primary">
                                                     <div class="box-header">
                                                         <h3 id="area01" class="box-title">删除信息确认</h3>
-                                                        <div class="box-tools pull-right">
-                                                            <button type="button" class="btn btn-danger btn-sm" data-widget="collapse" data-toggle="tooltip" data-original-title="关闭" data-placement="left"><i class="fa fa-minus fa-lg"></i></button>
-                                                        </div>
                                                     </div>
                                                     <div class="box-body">
                                                         <div class="form-group">
