@@ -102,6 +102,7 @@ class Menu extends AppModel {
 			'menu_actions' => array(
 				array('link' => 'admin/groups/add', 'name' => '创建'),
 				array('link' => 'admin/groups/index', 'name' => '查看'),
+				array('link' => 'admin/groups/view', 'name' => '详细'),
 				array('link' => 'admin/groups/edit', 'name' => '编辑'),
 				array('link' => 'admin/groups/delete', 'name' => '删除')
 			)

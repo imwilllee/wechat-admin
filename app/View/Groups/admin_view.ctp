@@ -1,154 +1,140 @@
-<div class="groups view">
-<h2><?php echo __('Group'); ?></h2>
-	<dl>
-		<dt><?php echo __('Id'); ?></dt>
-		<dd>
-			<?php echo h($group['Group']['id']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Name'); ?></dt>
-		<dd>
-			<?php echo h($group['Group']['name']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Is Active'); ?></dt>
-		<dd>
-			<?php echo h($group['Group']['is_active']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Explain'); ?></dt>
-		<dd>
-			<?php echo h($group['Group']['explain']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Created'); ?></dt>
-		<dd>
-			<?php echo h($group['Group']['created']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Created By'); ?></dt>
-		<dd>
-			<?php echo h($group['Group']['created_by']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Updated'); ?></dt>
-		<dd>
-			<?php echo h($group['Group']['updated']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Updated By'); ?></dt>
-		<dd>
-			<?php echo h($group['Group']['updated_by']); ?>
-			&nbsp;
-		</dd>
-	</dl>
-</div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('Edit Group'), array('action' => 'edit', $group['Group']['id'])); ?> </li>
-		<li><?php echo $this->Form->postLink(__('Delete Group'), array('action' => 'delete', $group['Group']['id']), array(), __('Are you sure you want to delete # %s?', $group['Group']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('List Groups'), array('action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Group'), array('action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Group Accesses'), array('controller' => 'group_accesses', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Group Access'), array('controller' => 'group_accesses', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Users'), array('controller' => 'users', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New User'), array('controller' => 'users', 'action' => 'add')); ?> </li>
-	</ul>
-</div>
-<div class="related">
-	<h3><?php echo __('Related Group Accesses'); ?></h3>
-	<?php if (!empty($group['GroupAccess'])): ?>
-	<table cellpadding = "0" cellspacing = "0">
-	<tr>
-		<th><?php echo __('Group Id'); ?></th>
-		<th><?php echo __('Menu Action Id'); ?></th>
-		<th class="actions"><?php echo __('Actions'); ?></th>
-	</tr>
-	<?php foreach ($group['GroupAccess'] as $groupAccess): ?>
-		<tr>
-			<td><?php echo $groupAccess['group_id']; ?></td>
-			<td><?php echo $groupAccess['menu_action_id']; ?></td>
-			<td class="actions">
-				<?php echo $this->Html->link(__('View'), array('controller' => 'group_accesses', 'action' => 'view', $groupAccess['id'])); ?>
-				<?php echo $this->Html->link(__('Edit'), array('controller' => 'group_accesses', 'action' => 'edit', $groupAccess['id'])); ?>
-				<?php echo $this->Form->postLink(__('Delete'), array('controller' => 'group_accesses', 'action' => 'delete', $groupAccess['id']), array(), __('Are you sure you want to delete # %s?', $groupAccess['id'])); ?>
-			</td>
-		</tr>
-	<?php endforeach; ?>
-	</table>
-<?php endif; ?>
+<?php
+    $breadcrumb = array(
+        array('text' => $controllerTitle),
+        array('text' => $actionTitle)
+    );
+    $this->set('breadcrumb', $breadcrumb);
+?>
 
-	<div class="actions">
-		<ul>
-			<li><?php echo $this->Html->link(__('New Group Access'), array('controller' => 'group_accesses', 'action' => 'add')); ?> </li>
-		</ul>
-	</div>
-</div>
-<div class="related">
-	<h3><?php echo __('Related Users'); ?></h3>
-	<?php if (!empty($group['User'])): ?>
-	<table cellpadding = "0" cellspacing = "0">
-	<tr>
-		<th><?php echo __('Id'); ?></th>
-		<th><?php echo __('Email'); ?></th>
-		<th><?php echo __('Username'); ?></th>
-		<th><?php echo __('Password'); ?></th>
-		<th><?php echo __('Group Id'); ?></th>
-		<th><?php echo __('Is Active'); ?></th>
-		<th><?php echo __('Mobile'); ?></th>
-		<th><?php echo __('Alias Name'); ?></th>
-		<th><?php echo __('Avatar'); ?></th>
-		<th><?php echo __('Sex'); ?></th>
-		<th><?php echo __('Birth'); ?></th>
-		<th><?php echo __('Last Logined'); ?></th>
-		<th><?php echo __('Last Login Ip'); ?></th>
-		<th><?php echo __('Last User Agent'); ?></th>
-		<th><?php echo __('Secret Key'); ?></th>
-		<th><?php echo __('Secret Key Expired'); ?></th>
-		<th><?php echo __('Explain'); ?></th>
-		<th><?php echo __('Created'); ?></th>
-		<th><?php echo __('Created By'); ?></th>
-		<th><?php echo __('Updated'); ?></th>
-		<th><?php echo __('Updated By'); ?></th>
-		<th class="actions"><?php echo __('Actions'); ?></th>
-	</tr>
-	<?php foreach ($group['User'] as $user): ?>
-		<tr>
-			<td><?php echo $user['id']; ?></td>
-			<td><?php echo $user['email']; ?></td>
-			<td><?php echo $user['username']; ?></td>
-			<td><?php echo $user['password']; ?></td>
-			<td><?php echo $user['group_id']; ?></td>
-			<td><?php echo $user['is_active']; ?></td>
-			<td><?php echo $user['mobile']; ?></td>
-			<td><?php echo $user['alias_name']; ?></td>
-			<td><?php echo $user['avatar']; ?></td>
-			<td><?php echo $user['sex']; ?></td>
-			<td><?php echo $user['birth']; ?></td>
-			<td><?php echo $user['last_logined']; ?></td>
-			<td><?php echo $user['last_login_ip']; ?></td>
-			<td><?php echo $user['last_user_agent']; ?></td>
-			<td><?php echo $user['secret_key']; ?></td>
-			<td><?php echo $user['secret_key_expired']; ?></td>
-			<td><?php echo $user['explain']; ?></td>
-			<td><?php echo $user['created']; ?></td>
-			<td><?php echo $user['created_by']; ?></td>
-			<td><?php echo $user['updated']; ?></td>
-			<td><?php echo $user['updated_by']; ?></td>
-			<td class="actions">
-				<?php echo $this->Html->link(__('View'), array('controller' => 'users', 'action' => 'view', $user['id'])); ?>
-				<?php echo $this->Html->link(__('Edit'), array('controller' => 'users', 'action' => 'edit', $user['id'])); ?>
-				<?php echo $this->Form->postLink(__('Delete'), array('controller' => 'users', 'action' => 'delete', $user['id']), array(), __('Are you sure you want to delete # %s?', $user['id'])); ?>
-			</td>
-		</tr>
-	<?php endforeach; ?>
-	</table>
-<?php endif; ?>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="nav-tabs-custom">
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="javascript:;"> 用户组信息</a></li>
+                                    <li>
+                                        <div class="btn-group">
+                                            <a class="btn btn-default" href="#area01"> 基本信息</a>
+                                            <a class="btn btn-default" href="#area02"> 访问权限</a>
+                                        </div>
+                                    </li>
 
-	<div class="actions">
-		<ul>
-			<li><?php echo $this->Html->link(__('New User'), array('controller' => 'users', 'action' => 'add')); ?> </li>
-		</ul>
-	</div>
-</div>
+                                </ul>
+                                <div class="tab-content show-line">
+                                    <div class="tab-pane active">
+
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="box box-solid box-primary">
+                                                    <div class="box-header">
+                                                        <h3 id="area01" class="box-title">基本信息</h3>
+                                                        <div class="box-tools pull-right">
+                                                            <button type="button" class="btn btn-primary btn-sm" data-widget="collapse" data-toggle="tooltip" data-original-title="关闭" data-placement="left"><i class="fa fa-minus fa-lg"></i></button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="box-body">
+                                                        <div class="form-group">
+                                                            <label>ID</label>
+                                                            <div class="input-group col-xs-12">
+                                                            <p class="form-control-static"><?php echo $group['Group']['id']; ?></p>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label>名称</label>
+                                                            <div class="input-group col-xs-12">
+                                                            <p class="form-control-static"><?php echo h($group['Group']['name']); ?></p>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label>登陆限制</label>
+                                                            <div class="input-group col-xs-12">
+                                                                <p class="form-control-static item-margin">
+                                                                <?php
+                                                                    echo $this->Form->radio('is_active', Configure::read('Default.active'), array('legend' => false, 'default' => $group['Group']['is_active'], 'disabled' => true));
+                                                                ?>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label>创建日期</label>
+                                                            <div class="input-group col-xs-12">
+                                                                <p class="form-control-static"><?php echo $group['Group']['created'];?></p>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label>备注说明</label>
+                                                            <div class="input-group col-xs-12">
+                                                                <p class="form-control-static"><?php echo nl2br(h($group['Group']['explain'])); ?></p>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="box box-solid box-primary">
+                                                    <div class="box-header">
+                                                        <h3 id="area02" class="box-title">访问权限</h3>
+                                                        <div class="box-tools pull-right">
+                                                            <button type="button" class="btn btn-primary btn-sm" data-widget="collapse" data-toggle="tooltip" data-original-title="关闭" data-placement="left"><i class="fa fa-minus fa-lg"></i></button>
+                                                        </div>
+                                                    </div>
+                                                    <div class="box-body">
+                                                        <div class="form-group">
+                                                            <label>用户昵称</label>
+                                                            <div class="input-group col-xs-12">
+                                                                <p class="form-control-static"><?php echo h($group['Group']['id']);?></p>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                    <?php
+                                                        echo $this->Admin->showNavEditLink(
+                                                            array(
+                                                                'controller' => 'groups',
+                                                                'action' => 'edit',
+                                                                'admin' => true,
+                                                                $group['Group']['id']
+                                                            )
+                                                        );
+                                                    ?>
+                                                    <?php
+                                                        if ($group['Group']['id'] != Configure::read('Group.supper_id')) {
+                                                            echo $this->Admin->showNavDeleteLink(
+                                                                array(
+                                                                    'controller' => 'groups',
+                                                                    'action' => 'delete',
+                                                                    'admin' => true,
+                                                                    $group['Group']['id']
+                                                                )
+                                                            );
+                                                        }
+                                                    ?>
+                                                    <?php
+                                                        echo $this->Admin->showNavBackwardLink(
+                                                            array(
+                                                                'controller' => 'groups',
+                                                                'action' => 'index',
+                                                                'admin' => true
+                                                            )
+                                                        );
+                                                    ?>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>

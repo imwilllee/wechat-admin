@@ -51,7 +51,7 @@
                                                                 'label' => false,
                                                                 'type' => 'select',
                                                                 'multiple' => 'checkbox',
-                                                                'options' =>Configure::read('User.active'),
+                                                                'options' =>Configure::read('Default.active'),
                                                                 'class' => 'pull-left',
                                                                 'div' => false
                                                             )
@@ -87,13 +87,13 @@
                                     <table class="table table-bordered table-striped table-hover">
                                         <thead>
                                             <tr>
-                                                <th>ID</th>
+                                                <th><?php echo $this->Paginator->sort('id', 'ID'); ?></th>
                                                 <th>用户名</th>
-                                                <th>用户组</th>
+                                                <th><?php echo $this->Paginator->sort('group_id', '用户组'); ?></th>
                                                 <th>昵称</th>
                                                 <th>邮箱</th>
                                                 <th>登陆限制</th>
-                                                <th>最后登陆</th>
+                                                <th><?php echo $this->Paginator->sort('last_logined', '最后登陆'); ?></th>
                                                 <th></th>
                                             </tr>
                                         </thead>
@@ -113,9 +113,9 @@
                                                 <td><?php echo $user['User']['email']; ?></td>
                                                 <td>
                                                 <?php if ($user['User']['is_active']): ?>
-                                                    <span class="label label-success"><?php echo Configure::read('User.active.1'); ?></span>
+                                                    <span class="label label-success"><?php echo Configure::read('Default.active.1'); ?></span>
                                                 <?php else: ?>
-                                                    <span class="label label-danger"><?php echo Configure::read('User.active.0'); ?></span>
+                                                    <span class="label label-danger"><?php echo Configure::read('Default.active.0'); ?></span>
                                                 <?php endif;?>
                                                 </td>
                                                 <td><?php echo $user['User']['last_logined']; ?></td>

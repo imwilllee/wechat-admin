@@ -16,17 +16,17 @@ $config = array(
  * 默认配置项
  */
 	'Default' => array(
-		'avatar_src' => '/img/avatar/00.png'
+		'avatar_src' => '/img/avatar/00.png',
+		'active_ok' => 1,
+		'active' => array(
+			0 => '禁止',
+			1 => '允许'
+		)
 	),
 /**
  * 用户配置项
  */
 	'User' => array(
-		'active' => array(
-			0 => '禁止',
-			1 => '允许'
-		),
-		'active_ok' => 1,
 		'sex' => array(
 			0 => '保密',
 			1 => '男性',
@@ -37,7 +37,6 @@ $config = array(
  * 用户组配置项
  */
 	'Group' => array(
-		'supper_id' => 1,
-		'active_ok' => 1
+		'supper_id' => 1
 	)
 );

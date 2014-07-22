@@ -50,8 +50,8 @@ class UsersController extends AppController {
 			if (empty($user)) {
 				$this->_showErrorMessage('登录账号或密码错误！');
 			} else {
-				if ($user['is_active'] == Configure::read('User.active_ok') &&
-					$user['Group']['is_active'] == Configure::read('Group.active_ok')) {
+				if ($user['is_active'] == Configure::read('Default.active_ok') &&
+					$user['Group']['is_active'] == Configure::read('Default.active_ok')) {
 					if ($this->Auth->login($user)) {
 						$this->__updateLoginInfo($user['id']);
 						$this->__setUserAccess($user['group_id']);

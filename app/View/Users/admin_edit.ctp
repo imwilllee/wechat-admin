@@ -72,7 +72,7 @@
                                                             <label>登陆限制</label>
                                                             <div class="input-group col-xs-12 col-md-12 item-margin">
                                                                 <?php
-                                                                    echo $this->Form->radio('is_active', Configure::read('User.active'), array('legend' => false, 'default' => 0));
+                                                                    echo $this->Form->radio('is_active', Configure::read('Default.active'), array('legend' => false, 'default' => 0));
                                                                 ?>
                                                             </div>
                                                             <?php echo $this->Admin->error('is_active'); ?>

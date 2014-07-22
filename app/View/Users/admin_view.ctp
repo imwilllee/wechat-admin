@@ -59,7 +59,7 @@
                                                             <div class="input-group col-xs-12">
                                                                 <p class="form-control-static item-margin">
                                                                 <?php
-                                                                    echo $this->Form->radio('is_active', Configure::read('User.active'), array('legend' => false, 'default' => $user['User']['is_active'], 'disabled' => true));
+                                                                    echo $this->Form->radio('is_active', Configure::read('Default.active'), array('legend' => false, 'default' => $user['User']['is_active'], 'disabled' => true));
                                                                 ?>
                                                                 </p>
                                                             </div>
@@ -67,14 +67,14 @@
                                                         <div class="form-group">
                                                             <label>创建日期</label>
                                                             <div class="input-group col-xs-12">
-                                                                <p class="form-control-static"><?php echo $this->Admin->showDateTime($user['User']['created'], 'Y年m月d日 H时i分s秒');?></p>
+                                                                <p class="form-control-static"><?php echo $user['User']['created'];?></p>
                                                             </div>
                                                         </div>
 
                                                         <div class="form-group">
                                                             <label>最后登陆日期</label>
                                                             <div class="input-group col-xs-12">
-                                                                <p class="form-control-static"><?php echo $this->Admin->showDateTime($user['User']['last_logined'], 'Y年m月d日 H时i分s秒');?></p>
+                                                                <p class="form-control-static"><?php echo $user['User']['last_logined'];?></p>
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
@@ -119,7 +119,7 @@
                                                         <div class="form-group">
                                                             <label>出生年月</label>
                                                             <div class="input-group col-xs-12">
-                                                                <p class="form-control-static"><?php echo $this->Admin->showDateTime($user['User']['birth'], 'Y年m月d日');?></p>
+                                                                <p class="form-control-static"><?php echo $user['User']['birth'];?></p>
                                                             </div>
                                                         </div>
 

@@ -10,6 +10,8 @@ App::uses('AppController', 'Controller');
  */
 class GroupsController extends AppController {
 
+	public $uses = array('Group', 'GroupAccess', 'Menu');
+
 /**
  * 主标题
  * @var string
@@ -17,28 +19,37 @@ class GroupsController extends AppController {
 	public $controllerTitle = '管理员用户组';
 
 /**
- * index method
+ * 用户组管理
  *
  * @return void
  */
 	public function admin_index() {
-		$this->Group->recursive = 0;
-		$this->set('groups', $this->Paginator->paginate());
+		$this->actionTitle = '用户组管理';
+		$options = array(
+			'contain' => false
+		);
+		$this->set('groups', $this->Group->find('all', $options));
 	}
 
 /**
- * view method
+ * 用户组详细
  *
  * @param string $id ID
  * @throws NotFoundDataException
  * @return void
  */
 	public function admin_view($id = null) {
+		$this->actionTitle = '用户组详细';
 		if (!$this->Group->exists($id)) {
-			throw new NotFoundDataException(__('Invalid group'));
+			throw new NotFoundDataException('数据不存在或已被删除！');
 		}
-		$options = array('conditions' => array('Group.' . $this->Group->primaryKey => $id));
-		$this->set('group', $this->Group->find('first', $options));
+		$options = array(
+			'conditions' => array('Group.id' => $id),
+			'contain' => false
+		);
+		$group = $this->Group->find('first', $options);
+		$accesses = $this->GroupAccess->getUserGroupAccessIds($id);
+		$this->set(compact('group', 'accesses'));
 	}
 
 /**

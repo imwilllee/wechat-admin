@@ -31,12 +31,15 @@ class GroupAccess extends AppModel {
 	);
 
 /**
- * 用户组访问权限
+ * 用户组访问权限链接
  * 
  * @param integer $groupId 用户组ID
  * @return array
  */
 	public function getUserGroupAccess($groupId) {
+		if ($groupId == Configure::read('Group.supper_id')) {
+			return true;
+		}
 		$access = array();
 		$options = array(
 			'conditions' => array('GroupAccess.group_id' => $groupId),
@@ -45,6 +48,29 @@ class GroupAccess extends AppModel {
 		$actions = $this->find('all', $options);
 		foreach ($actions as $action) {
 			$access[] = $action['MenuAction']['link'];
+		}
+		unset($options, $actions);
+		return $access;
+	}
+
+/**
+ * 用户组访问权限ID
+ * 
+ * @param integer $groupId 用户组ID
+ * @return array
+ */
+	public function getUserGroupAccessIds($groupId) {
+		if ($groupId == Configure::read('Group.supper_id')) {
+			return true;
+		}
+		$access = array();
+		$options = array(
+			'conditions' => array('GroupAccess.group_id' => $groupId),
+			'contain' => false
+		);
+		$actions = $this->find('all', $options);
+		foreach ($actions as $action) {
+			$access[] = $action['GroupAccess']['menu_action_id'];
 		}
 		unset($options, $actions);
 		return $access;

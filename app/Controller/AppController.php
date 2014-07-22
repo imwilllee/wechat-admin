@@ -35,7 +35,8 @@ class AppController extends Controller {
  */
 	public $paginate = array(
 		'paramType' => 'querystring',
-		'limit' => 10
+		'limit' => 10,
+		'maxLimit' => 50
 	);
 
 /**

@@ -48,7 +48,7 @@
                                                             <div class="input-group col-xs-12">
                                                                 <p class="form-control-static item-margin">
                                                                 <?php
-                                                                    echo $this->Form->radio('is_active', Configure::read('User.active'), array('legend' => false, 'default' => $user['User']['is_active'], 'disabled' => true));
+                                                                    echo $this->Form->radio('is_active', Configure::read('Default.active'), array('legend' => false, 'default' => $user['User']['is_active'], 'disabled' => true));
                                                                 ?>
                                                                 </p>
                                                             </div>
@@ -57,7 +57,7 @@
                                                         <div class="form-group">
                                                             <label>创建日期</label>
                                                             <div class="input-group col-xs-12">
-                                                                <p class="form-control-static"><?php echo $this->Admin->showDateTime($user['User']['created'], 'Y年m月d日 H时i分s秒');?></p>
+                                                                <p class="form-control-static"><?php echo $user['User']['created'];?></p>
                                                             </div>
                                                         </div>
                                                     </div>

@@ -1,60 +1,58 @@
-<div class="groups index">
-	<h2><?php echo __('Groups'); ?></h2>
-	<table cellpadding="0" cellspacing="0">
-	<thead>
-	<tr>
-			<th><?php echo $this->Paginator->sort('id'); ?></th>
-			<th><?php echo $this->Paginator->sort('name'); ?></th>
-			<th><?php echo $this->Paginator->sort('is_active'); ?></th>
-			<th><?php echo $this->Paginator->sort('explain'); ?></th>
-			<th><?php echo $this->Paginator->sort('created'); ?></th>
-			<th><?php echo $this->Paginator->sort('created_by'); ?></th>
-			<th><?php echo $this->Paginator->sort('updated'); ?></th>
-			<th><?php echo $this->Paginator->sort('updated_by'); ?></th>
-			<th class="actions"><?php echo __('Actions'); ?></th>
-	</tr>
-	</thead>
-	<tbody>
-	<?php foreach ($groups as $group): ?>
-	<tr>
-		<td><?php echo h($group['Group']['id']); ?>&nbsp;</td>
-		<td><?php echo h($group['Group']['name']); ?>&nbsp;</td>
-		<td><?php echo h($group['Group']['is_active']); ?>&nbsp;</td>
-		<td><?php echo h($group['Group']['explain']); ?>&nbsp;</td>
-		<td><?php echo h($group['Group']['created']); ?>&nbsp;</td>
-		<td><?php echo h($group['Group']['created_by']); ?>&nbsp;</td>
-		<td><?php echo h($group['Group']['updated']); ?>&nbsp;</td>
-		<td><?php echo h($group['Group']['updated_by']); ?>&nbsp;</td>
-		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $group['Group']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $group['Group']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $group['Group']['id']), array(), __('Are you sure you want to delete # %s?', $group['Group']['id'])); ?>
-		</td>
-	</tr>
+<?php
+    $breadcrumb = array(
+        array('text' => $controllerTitle),
+        array('text' => $actionTitle)
+    );
+    $this->set('breadcrumb', $breadcrumb);
+?>
+
+                            <div class="box box-primary">
+                                <div class="box-header">
+                                    <h3 class="box-title">数据一览</h3>
+                                </div>
+                                <div class="box-body table-responsive">
+                                    <table class="table table-bordered table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>名称</th>
+                                                <th>登陆限制</th>
+                                                <th>创建日期</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+<?php foreach ($groups as $group): ?>
+                                            <tr>
+                                                <td><?php echo $group['Group']['id']; ?></td>
+                                                <td>
+                                                <?php echo $this->Html->link($group['Group']['name'], array('controller' => 'groups', 'action' => 'view', 'admin' => true, $group['Group']['id'])); ?>
+                                                </td>
+                                                <td>
+                                                <?php if ($group['Group']['is_active']): ?>
+                                                    <span class="label label-success"><?php echo Configure::read('Default.active.1'); ?></span>
+                                                <?php else: ?>
+                                                    <span class="label label-danger"><?php echo Configure::read('Default.active.0'); ?></span>
+                                                <?php endif;?>
+                                                </td>
+                                                <td><?php echo $group['Group']['created']; ?></td>
+                                                <td>
+                                                <?php
+                                                    echo $this->Admin->showViewIconLink(array('controller' => 'groups', 'action' => 'view', 'admin' => true, $group['Group']['id']));
+                                                    echo $this->Admin->showEditIconLink(array('controller' => 'groups', 'action' => 'edit', 'admin' => true, $group['Group']['id']));
+                                                    if ($group['Group']['id'] != Configure::read('Group.supper_id')) {
+                                                        echo $this->Admin->showDeleteIconLink(array('controller' => 'groups', 'action' => 'delete', 'admin' => true, $group['Group']['id']));
+                                                    }
+                                                ?>
+                                                </td>
+                                            </tr>
 <?php endforeach; ?>
-	</tbody>
-	</table>
-	<p>
-	<?php
-	echo $this->Paginator->counter(array(
-	'format' => __('Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')
-	));
-	?>	</p>
-	<div class="paging">
-	<?php
-		echo $this->Paginator->prev('< ' . __('previous'), array(), null, array('class' => 'prev disabled'));
-		echo $this->Paginator->numbers(array('separator' => ''));
-		echo $this->Paginator->next(__('next') . ' >', array(), null, array('class' => 'next disabled'));
-	?>
-	</div>
-</div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('New Group'), array('action' => 'add')); ?></li>
-		<li><?php echo $this->Html->link(__('List Group Accesses'), array('controller' => 'group_accesses', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Group Access'), array('controller' => 'group_accesses', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Users'), array('controller' => 'users', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New User'), array('controller' => 'users', 'action' => 'add')); ?> </li>
-	</ul>
-</div>
+                                        </tbody>
+
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
