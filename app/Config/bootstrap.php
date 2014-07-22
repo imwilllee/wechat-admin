@@ -112,3 +112,46 @@ CakeLog::config('error', array(
 unset($logsPath);
 
 Configure::load('common');
+
+/**
+ * 数据不存在异常
+ */
+class NotFoundDataException extends HttpException {
+
+/**
+ * 构造函数
+ *
+ * @param string $message 异常信息
+ * @param int $code 异常代码
+ */
+	public function __construct($message = null, $code = 404) {
+		// 不记录日志
+		Configure::write('Exception.log', false);
+		if (empty($message)) {
+			$message = 'Data Not Found';
+		}
+		parent::__construct($message, $code);
+	}
+
+}
+
+/**
+ * 没有访问权限
+ */
+class NoPermissionException extends HttpException {
+
+/**
+ * 构造函数
+ *
+ * @param string $message 异常信息
+ * @param int $code 异常代码
+ */
+	public function __construct($message = null, $code = 403) {
+		// 不记录日志
+		Configure::write('Exception.log', false);
+		if (empty($message)) {
+			$message = 'Forbidden';
+		}
+		parent::__construct($message, $code);
+	}
+}

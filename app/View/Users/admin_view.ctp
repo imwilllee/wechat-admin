@@ -64,17 +64,23 @@
                                                                 </p>
                                                             </div>
                                                         </div>
+                                                        <div class="form-group">
+                                                            <label>创建日期</label>
+                                                            <div class="input-group col-xs-12">
+                                                                <p class="form-control-static"><?php echo $this->Admin->showDateTime($user['User']['created'], 'Y年m月d日 H时i分s秒');?></p>
+                                                            </div>
+                                                        </div>
 
                                                         <div class="form-group">
                                                             <label>最后登陆日期</label>
                                                             <div class="input-group col-xs-12">
-                                                                <p class="form-control-static"><?php echo h($user['User']['last_logined']);?></p>
+                                                                <p class="form-control-static"><?php echo $this->Admin->showDateTime($user['User']['last_logined'], 'Y年m月d日 H时i分s秒');?></p>
                                                             </div>
                                                         </div>
                                                         <div class="form-group">
                                                             <label>最后登陆IP</label>
                                                             <div class="input-group col-xs-12">
-                                                                <p class="form-control-static"><?php echo h($user['User']['last_login_ip']);?></p>
+                                                                <p class="form-control-static"><?php echo $user['User']['last_login_ip'];?></p>
                                                             </div>
                                                         </div>
                                                         <div class="form-group">

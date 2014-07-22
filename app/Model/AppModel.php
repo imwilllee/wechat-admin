@@ -81,12 +81,15 @@ class AppModel extends Model {
 /**
  * 日期格式检查
  * 
- * @param string $check 比较内容
- * @param string $format 日期格式
+ * @param string $check 日期
+ * @param string $format 格式
  * @return boolean
  */
 	public function checkDateTimeFormat($check, $format = 'Y-m-d') {
 		$value = array_values($check);
+		if (empty($value)) {
+			return false;
+		}
 		$date = DateTime::createFromFormat($format, $value[0]);
 		return $date && $date->format($format) == $value[0];
 	}

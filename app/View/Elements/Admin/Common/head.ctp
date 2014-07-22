@@ -1,9 +1,9 @@
 <?php
     $title = $controllerTitle;
     if (!is_null($actionTitle)) {
-        $title .= ' ' . $actionTitle;
+        $title .= Configure::read('WeChat.title_separator') . $actionTitle;
     }
-    $title .= '_' . Configure::read('WeChat.name');
+    $title .= Configure::read('WeChat.title_separator') . Configure::read('WeChat.name');
     $this->assign('title', $title); 
 ?>
     <head>

@@ -1,29 +1,47 @@
-<?php
-/**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
- * Licensed under The MIT License
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       app.View.Errors
- * @since         CakePHP(tm) v 0.10.0.1076
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
- */
-?>
-<h2><?php echo $message; ?></h2>
-<p class="error">
-	<strong><?php echo __d('cake', 'Error'); ?>: </strong>
-	<?php printf(
-		__d('cake', 'The requested address %s was not found on this server.'),
-		"<strong>'{$url}'</strong>"
-	); ?>
-</p>
-<?php
-if (Configure::read('debug') > 0):
-	echo $this->element('exception_stack_trace');
-endif;
-?>
+<div class="row">
+    <div class="error-page">
+        <?php if ($code >= 500): ?>
+        <h2 class="headline"> <?php echo $code; ?></h2>
+        <?php else: ?>
+        <h2 class="headline text-info"> <?php echo $code; ?></h2>
+        <?php endif; ?>
+        <div class="error-content">
+            <div class="col-xs-12">
+                <h3><i class="fa fa-warning text-yellow"></i> <?php echo $message; ?></h3>
+                <p>您请求的地址<strong class="text-light-blue"><?php echo h($url); ?></strong>发生了错误！</p>
+            </div>
+            <div class="col-xs-12">
+                <?php
+                    $referer = env('HTTP_REFERER');
+                    if (!empty($referer)) {
+                        echo $this->Html->link(
+                            '返回上一页',
+                            $referer,
+                            array('class' => 'btn btn-default btn-flat')
+                        );
+                    }
+                    unset($referer);
+                ?>
+                <?php
+                    if ($this->Session->check('Auth.Admin')) {
+                        echo $this->Html->link(
+                            '控制面板',
+                            array('controller' => 'dashboard', 'action' => 'index', 'admin' => true),
+                            array('class' => 'btn btn-info btn-flat')
+                        );
+                    }
+                ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php if (Configure::read('debug') > 0): ?>
+<div class="row">
+    <div class="col-xs-12">
+        <pre>
+<?php echo $this->element('exception_stack_trace');?>
+        </pre>
+    </div>
+</div>
+<?php endif; ?>

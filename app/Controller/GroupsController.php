@@ -30,12 +30,12 @@ class GroupsController extends AppController {
  * view method
  *
  * @param string $id ID
- * @throws NotFoundException
+ * @throws NotFoundDataException
  * @return void
  */
 	public function admin_view($id = null) {
 		if (!$this->Group->exists($id)) {
-			throw new NotFoundException(__('Invalid group'));
+			throw new NotFoundDataException(__('Invalid group'));
 		}
 		$options = array('conditions' => array('Group.' . $this->Group->primaryKey => $id));
 		$this->set('group', $this->Group->find('first', $options));
@@ -62,12 +62,12 @@ class GroupsController extends AppController {
  * edit method
  *
  * @param string $id ID
- * @throws NotFoundException
+ * @throws NotFoundDataException
  * @return void
  */
 	public function admin_edit($id = null) {
 		if (!$this->Group->exists($id)) {
-			throw new NotFoundException(__('Invalid group'));
+			throw new NotFoundDataException(__('Invalid group'));
 		}
 		if ($this->request->is(array('post', 'put'))) {
 			if ($this->Group->save($this->request->data)) {
@@ -86,13 +86,13 @@ class GroupsController extends AppController {
  * delete method
  *
  * @param string $id ID
- * @throws NotFoundException
+ * @throws NotFoundDataException
  * @return void
  */
 	public function admin_delete($id = null) {
 		$this->Group->id = $id;
 		if (!$this->Group->exists()) {
-			throw new NotFoundException(__('Invalid group'));
+			throw new NotFoundDataException(__('Invalid group'));
 		}
 		$this->request->allowMethod('post', 'delete');
 		if ($this->Group->delete()) {

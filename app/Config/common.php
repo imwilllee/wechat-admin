@@ -9,7 +9,8 @@
  */
 $config = array(
 	'WeChat' => array(
-		'name' => 'WeChatAdmin'
+		'name' => 'WeChatAdmin',
+		'title_separator' => '_'
 	),
 /**
  * 默认配置项

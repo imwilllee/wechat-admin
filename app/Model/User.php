@@ -32,7 +32,7 @@ class User extends AppModel {
  * @return void
  */
 	public function validateDefault($options = array()) {
-		$groups = array_keys($this->Group->find('list'));
+		$groups = array_keys($this->Group->getGroupList());
 		$this->validator()
 			->add('username', array(
 				'required' => array(

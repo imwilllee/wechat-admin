@@ -102,7 +102,12 @@
 <?php foreach ($users as $user): ?>
                                             <tr>
                                                 <td><?php echo $user['User']['id']; ?></td>
-                                                <td><?php echo $this->Html->link($user['User']['username'], array('controller' => 'users', 'action' => 'view', 'admin' => true, $user['User']['id'])); ?></td>
+                                                <td>
+                                                <?php echo $this->Html->link($user['User']['username'], array('controller' => 'users', 'action' => 'view', 'admin' => true, $user['User']['id'])); ?>
+                                                <?php if ($user['User']['id'] == $this->Session->read('Auth.Admin.id')): ?>
+                                                    <br><span class="label label-info">当前登陆</span>
+                                                <?php endif;?>
+                                                </td>
                                                 <td><?php echo $this->Html->link($user['Group']['name'], array('controller' => 'groups', 'action' => 'view', 'admin' => true, $user['Group']['id'])); ?></td>
                                                 <td><?php echo h($user['User']['alias_name']); ?></td>
                                                 <td><?php echo $user['User']['email']; ?></td>

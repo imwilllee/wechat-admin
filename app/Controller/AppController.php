@@ -72,6 +72,7 @@ class AppController extends Controller {
 		if (isset($request->params['admin']) && $request->params['admin'] == true) {
 			// 管理端加载配置
 			$this->_admin = true;
+			$this->_flashKey = 'Admin';
 			$this->components = array(
 				'Session',
 				'Paginator',
@@ -101,31 +102,30 @@ class AppController extends Controller {
 			);
 		} else {
 			// 前端加载配置
+			$this->_flashKey = 'Front';
 		}
 		parent::__construct($request, $response);
 	}
 
 /**
  * 控制器方法调用前回调方法
- * 
+ *
+ * @throws NoPermissionException
  * @return void
  */
 	public function beforeFilter() {
 		if ($this->_admin == true) {
 			AuthComponent::$sessionKey = 'Auth.Admin';
-			$this->_flashKey = 'Admin';
-			if (!$this->Auth->loggedIn()) {
-				return false;
-			}
 			$this->layout = 'Admin/default';
 			$this->helpers = array_merge($this->helpers, array('Admin'));
-			if (!$this->__checkUserAccess()) {
-				$this->response->statusCode(403);
-				$this->_showErrorMessage('该账号无权访问该页面！');
-				// $this->render('/Errors/Admin/error400');
-				// $this->response->send();
-				// $this->_stop();
-				return false;
+
+			if (!in_array($this->request->params['action'], $this->Auth->allowedActions)) {
+				if (!$this->Auth->loggedIn()) {
+					return false;
+				}
+				if (!$this->__checkUserAccess()) {
+					throw new NoPermissionException("该账号暂无权访问该页面！");
+				}
 			}
 		} else {
 			$this->layout = 'Front/default';
@@ -217,16 +217,19 @@ class AppController extends Controller {
  */
 	private function __checkUserAccess() {
 		if ($this->Session->read('Auth.Admin.group_id') != Configure::read('Group.supper_id')) {
-			$prefix = $this->request->params['prefix'];
-			$plugin = $this->request->params['plugin'];
-			$controller = $this->request->params['controller'];
-			$find = $prefix . '_';
-			$action = str_replace($find, '', $this->request->params['action']);
-			$path = $prefix . '/';
-			if (!empty($plugin)) {
-				$path .= $plugin . '/';
+			$path = $prefix = null;
+			$plugin = !empty($this->request->params['plugin']) ? strtolower($this->request->params['plugin']) . '/' : null;
+			$controller = strtolower($this->request->params['controller']) . '/';
+			$action = strtolower($this->request->params['action']);
+
+			if (!empty($this->request->params['prefix'])) {
+				$prefix = strtolower($this->request->params['prefix']);
+				$find = $prefix . '_';
+				$action = str_replace($find, '', $action);
+				$prefix .= '/';
 			}
-			$path .= $controller . '/' . $action;
+			$path = $prefix . $plugin . $controller . $action;
+			unset($prefix, $plugin, $controller, $action);
 			if (!in_array($path, $this->Session->read('Auth.Admin.Access'))) {
 				return false;
 			}

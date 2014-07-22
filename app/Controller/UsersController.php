@@ -28,10 +28,10 @@ class UsersController extends AppController {
  * @return void
  */
 	public function beforeFilter() {
-		parent::beforeFilter();
-		if ($this->_admin) {
+		if ($this->_admin == true) {
 			$this->Auth->allow(array('admin_login', 'admin_logout'));
 		}
+		parent::beforeFilter();
 	}
 
 /**
@@ -160,7 +160,7 @@ class UsersController extends AppController {
  * 管理员详细
  *
  * @param string $id ID
- * @throws NotFoundException
+ * @throws NotFoundDataException
  * @return void
  */
 	public function admin_view($id = null) {
@@ -169,7 +169,7 @@ class UsersController extends AppController {
 			$id = $this->Session->read('Auth.Admin.id');
 		}
 		if (!$this->User->exists($id)) {
-			throw new NotFoundException('用户信息不存在！');
+			throw new NotFoundDataException('数据不存在或已被删除！');
 		}
 		$options = array(
 			'conditions' => array('User.id' => $id),
@@ -194,7 +194,7 @@ class UsersController extends AppController {
 				$this->_showErrorMessage('数据保存失败！请根据错误提示修正。');
 			}
 		}
-		$groups = $this->User->Group->find('list');
+		$groups = $this->User->Group->getGroupList();
 		$this->set(compact('groups'));
 	}
 
@@ -202,15 +202,21 @@ class UsersController extends AppController {
  * 管理员编辑
  *
  * @param string $id ID
- * @throws NotFoundException
+ * @throws NotFoundDataException
  * @return void
  */
 	public function admin_edit($id = null) {
+		$this->actionTitle = '管理员编辑';
 		$options = array('conditions' => array('User.id' => $id), 'contain' => false);
 		$user = !empty($id) ? $this->User->find('first', $options) : null;
 		if (empty($user)) {
-			throw new NotFoundException('用户信息不存在！');
+			throw new NotFoundDataException('数据不存在或已被删除！');
 		}
+		if (!$this->__userExclusive($user['User']['group_id'])) {
+			$this->_showWarningMessage('不能编辑其他用户组下用户！');
+			return $this->redirect(array('controller' => 'users', 'action' => 'index', 'admin' => true));
+		}
+
 		if ($this->request->is(array('post', 'put'))) {
 			if ($this->User->save($this->request->data)) {
 				$this->_showSuccessMessage('数据保存成功！');
@@ -225,28 +231,57 @@ class UsersController extends AppController {
 			$this->request->data = $user;
 		}
 		unset($user);
-		$groups = $this->User->Group->find('list');
+		$groups = $this->User->Group->getGroupList();
 		$this->set(compact('groups'));
 	}
 
 /**
- * delete method
+ * 管理员删除
  *
  * @param string $id ID
- * @throws NotFoundException
+ * @throws NotFoundDataException
  * @return void
  */
 	public function admin_delete($id = null) {
-		$this->User->id = $id;
-		if (!$this->User->exists()) {
-			throw new NotFoundException(__('Invalid user'));
+		$this->actionTitle = '管理员删除';
+		$options = array('conditions' => array('User.id' => $id), 'contain' => array('Group'));
+		$user = !empty($id) ? $this->User->find('first', $options) : null;
+		if (empty($user)) {
+			throw new NotFoundDataException('数据不存在或已被删除！');
 		}
-		$this->request->allowMethod('post', 'delete');
-		if ($this->User->delete()) {
-			$this->Session->setFlash(__('The user has been deleted.'));
-		} else {
-			$this->Session->setFlash(__('The user could not be deleted. Please, try again.'));
+		if ($id == $this->Session->read('Auth.Admin.id')) {
+			$this->_showWarningMessage('不能删除当前登陆用户！');
+			return $this->redirect(array('controller' => 'users', 'action' => 'index', 'admin' => true));
 		}
-		return $this->redirect(array('action' => 'index'));
+		if (!$this->__userExclusive($user['User']['group_id'])) {
+			$this->_showWarningMessage('不能删除其他用户组下用户！');
+			return $this->redirect(array('controller' => 'users', 'action' => 'index', 'admin' => true));
+		}
+
+		if ($this->request->is('delete')) {
+			$this->User->id = $id;
+			if ($this->User->delete()) {
+				$this->_showSuccessMessage('数据删除成功！');
+				return $this->redirect(array('controller' => 'users', 'action' => 'index', 'admin' => true));
+			} else {
+				$this->_showErrorMessage('数据删除失败！');
+			}
+		}
+		$this->set(compact('user'));
+	}
+
+/**
+ * 数据排他限制
+ * 
+ * @param integer $userGroupId 用户组ID
+ * @return boolean
+ */
+	private function __userExclusive($userGroupId) {
+		if ($this->Session->read('Auth.Admin.group_id') != Configure::read('Group.supper_id')) {
+			if ($userGroupId != $this->Session->read('Auth.Admin.group_id')) {
+				return false;
+			}
+		}
+		return true;
 	}
 }
