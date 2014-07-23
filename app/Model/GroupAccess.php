@@ -38,7 +38,7 @@ class GroupAccess extends AppModel {
  */
 	public function getUserGroupAccess($groupId) {
 		if ($groupId == Configure::read('Group.supper_id')) {
-			return true;
+			return array();
 		}
 		$access = array();
 		$options = array(
@@ -61,7 +61,7 @@ class GroupAccess extends AppModel {
  */
 	public function getUserGroupAccessIds($groupId) {
 		if ($groupId == Configure::read('Group.supper_id')) {
-			return true;
+			return array();
 		}
 		$access = array();
 		$options = array(

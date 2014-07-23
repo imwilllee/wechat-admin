@@ -85,12 +85,38 @@
                                                         </div>
                                                     </div>
                                                     <div class="box-body">
-                                                        <div class="form-group">
-                                                            <label>用户昵称</label>
-                                                            <div class="input-group col-xs-12">
-                                                                <p class="form-control-static"><?php echo h($group['Group']['id']);?></p>
-                                                            </div>
-                                                        </div>
+<div class="row">
+                                                    <?php foreach ($menus as $menu): ?>
+<div class="col-md-4 col-xs-12">
+                            <div class="box box-primary">
+                                <div class="box-header">
+                                    <h3 class="box-title"><?php echo h($menu['Menu']['name']); ?></h3>
+                                </div>
+                                <div class="box-body">
+                                    <div class="item-margin">
+                                <?php foreach ($menu['MenuAction'] as $action): ?>
+                                    <label>
+                                    <?php
+                                        echo $this->Form->checkbox(
+                                            'menu_action_id',
+                                            array(
+                                                'value' => $action['id'],
+                                                'id' => false,
+                                                'name' => false,
+                                                'checked' => in_array($action['id'], $accesses) || $checked == true ? true : false,
+                                                'disabled' => true
+                                            )
+                                        );
+                                    ?>
+                                    <?php echo h($action['name']); ?>
+                                    </label>
+                                <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            </div>
+</div>
+                                                    <?php endforeach; ?>
+</div>
 
                                                     </div>
                                                 </div>

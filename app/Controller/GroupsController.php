@@ -49,7 +49,9 @@ class GroupsController extends AppController {
 		);
 		$group = $this->Group->find('first', $options);
 		$accesses = $this->GroupAccess->getUserGroupAccessIds($id);
-		$this->set(compact('group', 'accesses'));
+		$menus = $this->Menu->getMenuActions();
+		$checked = $id == Configure::read('Group.supper_id') ? true : false;
+		$this->set(compact('group', 'accesses', 'menus', 'checked'));
 	}
 
 /**

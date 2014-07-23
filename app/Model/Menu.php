@@ -54,8 +54,29 @@ class Menu extends AppModel {
 			'rank' => 0,
 			'display_flg' => true,
 			'menu_actions' => array(
-				array('link' => 'admin/dashboard/index', 'name' => '控制面板')
+				array('link' => 'admin/dashboard/index', 'name' => '查看')
 			)
+		),
+		array(
+			'menu_code' => 'wechat',
+			'parent_code' => null,
+			'name' => '微信公众平台',
+			'link' => null,
+			'class' => 'fa fa-wechat',
+			'rank' => 0,
+			'display_flg' => true,
+			'menu_actions' => array(
+				array('link' => 'admin/wechat/account', 'name' => '公众号管理')
+			)
+		),
+		array(
+			'menu_code' => null,
+			'parent_code' => 'wechat',
+			'name' => '公众号管理',
+			'link' => 'admin/wechat/account',
+			'class' => null,
+			'rank' => 0,
+			'display_flg' => true
 		),
 		array(
 			'menu_code' => 'users',
@@ -131,6 +152,7 @@ class Menu extends AppModel {
 			$data = array();
 			if (!empty($menu['menu_actions'])) {
 				$data['MenuAction'] = $menu['menu_actions'];
+				$menu['has_actions'] = true;
 				unset($menu['menu_actions']);
 			}
 			$data['Menu'] = $menu;
@@ -214,5 +236,23 @@ class Menu extends AppModel {
 		}
 		unset($options);
 		return $sideBarMenus;
+	}
+
+/**
+ * 菜单对应操作取得
+ * 
+ * @return array
+ */
+	public function getMenuActions() {
+		$options = array(
+			'fields' => array('id', 'name'),
+			'conditions' => array(
+				'Menu.has_actions' => true
+			),
+			'order' => array('Menu.rank' => 'ASC', 'Menu.parent_code' => 'ASC'),
+			'contain' => array('MenuAction')
+		);
+		$menuActions = $this->find('all', $options);
+		return $menuActions;
 	}
 }
