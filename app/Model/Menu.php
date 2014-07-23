@@ -65,15 +65,28 @@ class Menu extends AppModel {
 			'class' => 'fa fa-wechat',
 			'rank' => 0,
 			'display_flg' => true,
-			'menu_actions' => array(
-				array('link' => 'admin/wechat/account', 'name' => '公众号管理')
-			)
 		),
 		array(
 			'menu_code' => null,
 			'parent_code' => 'wechat',
 			'name' => '公众号管理',
-			'link' => 'admin/wechat/account',
+			'link' => 'admin/account_admin/index',
+			'class' => null,
+			'rank' => 0,
+			'display_flg' => true,
+			'menu_actions' => array(
+				array('link' => 'admin/account_admin/add', 'name' => '创建'),
+				array('link' => 'admin/account_admin/index', 'name' => '查看'),
+				array('link' => 'admin/account_admin/view', 'name' => '详细'),
+				array('link' => 'admin/account_admin/edit', 'name' => '编辑'),
+				array('link' => 'admin/account_admin/delete', 'name' => '删除')
+			)
+		),
+		array(
+			'menu_code' => null,
+			'parent_code' => 'wechat',
+			'name' => '添加公众号',
+			'link' => 'admin/account_admin/add',
 			'class' => null,
 			'rank' => 0,
 			'display_flg' => true
@@ -249,7 +262,6 @@ class Menu extends AppModel {
 			'conditions' => array(
 				'Menu.has_actions' => true
 			),
-			'order' => array('Menu.rank' => 'ASC', 'Menu.parent_code' => 'ASC'),
 			'contain' => array('MenuAction')
 		);
 		$menuActions = $this->find('all', $options);
