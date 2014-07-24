@@ -60,7 +60,7 @@ class Menu extends AppModel {
 		array(
 			'menu_code' => 'wechat',
 			'parent_code' => null,
-			'name' => '微信公众平台',
+			'name' => '微信公众号',
 			'link' => null,
 			'class' => 'fa fa-wechat',
 			'rank' => 0,
@@ -187,24 +187,23 @@ class Menu extends AppModel {
  */
 	public function getLeftSidebarMenus() {
 		$sideBarMenus = array();
-		$options = array(
-			'fields' => array('id', 'plugin_code', 'menu_code', 'parent_code', 'name', 'link', 'class'),
-			'conditions' => array(
-				'Menu.display_flg' => true,
-				'Menu.menu_code IS NOT NULL',
-				'Menu.parent_code IS NULL'
-			),
-			'order' => array('Menu.rank' => 'ASC'),
-			'contain' => false
-		);
 		$supperAdmin = CakeSession::read('Auth.Admin.group_id') == Configure::read('Group.supper_id') ? true : false;
-
 		$access = CakeSession::read('Auth.Admin.Access');
 		$menus = Cache::read('cache_admin_menus');
+
 		if (empty($menus)) {
-			$menus = $this->find('all', $options);
-			Cache::write('cache_admin_menus', $menus);
+			$conditions = array(
+				'Menu.menu_code IS NOT NULL',
+				'Menu.parent_code IS NULL',
+				'Menu.display_flg' => true
+			);
+			$order = array('Menu.rank' => 'ASC');
+			$menus = $this->__getMenus($conditions, $order);
+			if (!empty($menus)) {
+				Cache::write('cache_admin_menus', $menus);
+			}
 		}
+		// 顶级菜单处理
 		foreach ($menus as $menu) {
 			if ($supperAdmin == false) {
 				if (!empty($menu['Menu']['link'])) {
@@ -217,19 +216,23 @@ class Menu extends AppModel {
 			$sideBarMenus[$menu['Menu']['menu_code']] = $menu['Menu'];
 		}
 		unset($menus);
+
 		if (!empty($sideBarMenus)) {
 			$hasMenus = Cache::read('cache_admin_has_menus');
 			if (empty($hasMenus)) {
-				$options['conditions'] = array(
-					'Menu.display_flg' => true,
+				$conditions = array(
 					'Menu.menu_code IS NULL',
-					'Menu.parent_code IS NOT NULL'
+					'Menu.parent_code IS NOT NULL',
+					'Menu.display_flg' => true
 				);
-				$options['order'] = array('Menu.parent_code' => 'ASC', 'Menu.rank' => 'ASC');
-				$hasMenus = $this->find('all', $options);
-				Cache::write('cache_admin_has_menus', $hasMenus);
+				$order = array('Menu.parent_code' => 'ASC', 'Menu.rank' => 'ASC');
+				$hasMenus = $this->__getMenus($conditions, $order);
+				if (!empty($hasMenus)) {
+					Cache::write('cache_admin_has_menus', $hasMenus);
+				}
 			}
 
+			// 二级菜单处理
 			foreach ($hasMenus as $key) {
 				if ($supperAdmin == false) {
 					if (!empty($key['Menu']['link'])) {
@@ -257,14 +260,57 @@ class Menu extends AppModel {
  * @return array
  */
 	public function getMenuActions() {
-		$options = array(
-			'fields' => array('id', 'name'),
-			'conditions' => array(
-				'Menu.has_actions' => true
-			),
-			'contain' => array('MenuAction')
+		$menuActions = array();
+		// 主菜单
+		$conditions = array(
+			'Menu.menu_code IS NOT NULL',
+			'Menu.parent_code IS NULL'
 		);
-		$menuActions = $this->find('all', $options);
+		$order = array('Menu.rank' => 'ASC');
+		$rootMenus = $this->__getMenus($conditions, $order, array('MenuAction'));
+		foreach ($rootMenus as $root) {
+			if (!empty($root['MenuAction'])) {
+				$root['Menu']['has_actions'] = $root['MenuAction'];
+			}
+			$root['Menu']['has_menus'] = array();
+			$menuActions[$root['Menu']['menu_code']] = $root['Menu'];
+		}
+		unset($rootMenus);
+
+		// 子菜单
+		$conditions = array(
+			'Menu.menu_code IS NULL',
+			'Menu.parent_code IS NOT NULL',
+			'Menu.has_actions' => true
+		);
+		$order = array('Menu.parent_code' => 'ASC', 'Menu.rank' => 'ASC');
+		$childMenus = $this->__getMenus($conditions, $order, array('MenuAction'));
+		foreach ($childMenus as $child) {
+			$menuCode = $child['Menu']['parent_code'];
+			if (isset($menuActions[$menuCode])) {
+				$child['Menu']['has_actions'] = $child['MenuAction'];
+				$menuActions[$menuCode]['has_menus'][] = $child['Menu'];
+			}
+		}
+		unset($childMenus);
 		return $menuActions;
+	}
+
+/**
+ * 取得菜单
+ * 
+ * @param array $conditions 顶级节点标志
+ * @param array $order 排序
+ * @param mixed $contain 关联模型
+ * @return array
+ */
+	private function __getMenus($conditions = array(), $order = array(), $contain = false) {
+		$options = array(
+			'fields' => array('id', 'plugin_code', 'menu_code', 'parent_code', 'name', 'link', 'class'),
+			'conditions' => $conditions,
+			'order' => $order,
+			'contain' => $contain
+		);
+		return $this->find('all', $options);
 	}
 }

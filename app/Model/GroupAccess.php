@@ -11,12 +11,6 @@ App::uses('AppModel', 'Model');
 class GroupAccess extends AppModel {
 
 /**
- * 主键
- * @var boolean
- */
-	public $primaryKey = false;
-
-/**
  * belongsTo 关系定义
  * @var array
  */
@@ -55,11 +49,12 @@ class GroupAccess extends AppModel {
 
 /**
  * 用户组访问权限ID
+ * 绑定checkbox
  * 
  * @param integer $groupId 用户组ID
  * @return array
  */
-	public function getUserGroupAccessIds($groupId) {
+	public function getGroupAccessForCheckbox($groupId) {
 		if ($groupId == Configure::read('Group.supper_id')) {
 			return array();
 		}
@@ -70,7 +65,7 @@ class GroupAccess extends AppModel {
 		);
 		$actions = $this->find('all', $options);
 		foreach ($actions as $action) {
-			$access[] = $action['GroupAccess']['menu_action_id'];
+			$access[$action['GroupAccess']['menu_action_id']] = $action['GroupAccess'];
 		}
 		unset($options, $actions);
 		return $access;

@@ -116,6 +116,7 @@ class AppController extends Controller {
  */
 	public function beforeFilter() {
 		if ($this->_admin == true) {
+			$this->Security->blackHoleCallback = 'blackhole';
 			AuthComponent::$sessionKey = 'Auth.Admin';
 			$this->layout = 'Admin/default';
 			$this->helpers = array_merge($this->helpers, array('Admin'));
@@ -131,6 +132,17 @@ class AppController extends Controller {
 		} else {
 			$this->layout = 'Front/default';
 		}
+	}
+
+/**
+ * Security错误捕获处理
+ * 
+ * @param string $type 类型
+ * @throws BadHttpRequestException 异常
+ * @return void
+ */
+	public function blackhole($type) {
+		throw new BadHttpRequestException('非法请求！');
 	}
 
 /**

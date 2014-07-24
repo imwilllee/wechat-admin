@@ -4,6 +4,9 @@
         array('text' => $actionTitle)
     );
     $this->set('breadcrumb', $breadcrumb);
+    if ($group['Group']['id'] == Configure::read('Group.supper_id')) {
+        $this->set('checked', true);
+    }
 ?>
 
                     <div class="row">
@@ -17,7 +20,6 @@
                                             <a class="btn btn-default" href="#area02"> 访问权限</a>
                                         </div>
                                     </li>
-
                                 </ul>
                                 <div class="tab-content show-line">
                                     <div class="tab-pane active">
@@ -85,39 +87,32 @@
                                                         </div>
                                                     </div>
                                                     <div class="box-body">
-<div class="row">
-                                                    <?php foreach ($menus as $menu): ?>
-<div class="col-md-4 col-xs-12">
-                            <div class="box box-primary">
-                                <div class="box-header">
-                                    <h3 class="box-title"><?php echo h($menu['Menu']['name']); ?></h3>
-                                </div>
-                                <div class="box-body">
-                                    <div class="item-margin">
-                                <?php foreach ($menu['MenuAction'] as $action): ?>
-                                    <label>
-                                    <?php
-                                        echo $this->Form->checkbox(
-                                            'menu_action_id',
-                                            array(
-                                                'value' => $action['id'],
-                                                'id' => false,
-                                                'name' => false,
-                                                'checked' => in_array($action['id'], $accesses) || $checked == true ? true : false,
-                                                'disabled' => true
-                                            )
-                                        );
-                                    ?>
-                                    <?php echo h($action['name']); ?>
-                                    </label>
-                                <?php endforeach; ?>
-                                    </div>
-                                </div>
-                            </div>
-</div>
-                                                    <?php endforeach; ?>
-</div>
+                                                        <div class="row">
+<?php foreach ($menus as $code => $root): ?>
+                                                            <div class="col-md-12 col-xs-12">
+                                                                <div class="box box-primary">
+                                                                    <div class="box-header">
+                                                                        <h3 class="box-title"><?php echo h($root['name']); ?></h3>
+                                                                        <div class="box-tools pull-right">
+                                                                            <button type="button" class="btn btn-primary btn-sm" data-widget="collapse" data-toggle="tooltip" data-original-title="关闭" data-placement="left"><i class="fa fa-minus fa-lg"></i></button>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="box-body">
+                                                                        <div class="row">
+    <?php if (!empty($root['has_actions'])): ?>
+        <?php echo $this->element('Admin/Groups/menu_actions', array('menu' => $root, 'disabled' => true)); ?>
+    <?php endif; ?>
 
+    <?php foreach ($root['has_menus'] as $menu): ?>
+        <?php echo $this->element('Admin/Groups/menu_actions', array('menu' => $menu, 'disabled' => true)); ?>
+    <?php endforeach; ?>
+                                                                        </div>
+    
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+<?php endforeach; ?>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -125,6 +120,7 @@
 
                                         <div class="row">
                                             <div class="col-xs-12">
+                                                <?php if ($group['Group']['id'] != Configure::read('Group.supper_id')) : ?>
                                                     <?php
                                                         echo $this->Admin->showNavEditLink(
                                                             array(
@@ -136,17 +132,16 @@
                                                         );
                                                     ?>
                                                     <?php
-                                                        if ($group['Group']['id'] != Configure::read('Group.supper_id')) {
-                                                            echo $this->Admin->showNavDeleteLink(
-                                                                array(
-                                                                    'controller' => 'groups',
-                                                                    'action' => 'delete',
-                                                                    'admin' => true,
-                                                                    $group['Group']['id']
-                                                                )
-                                                            );
-                                                        }
+                                                        echo $this->Admin->showNavDeleteLink(
+                                                            array(
+                                                                'controller' => 'groups',
+                                                                'action' => 'delete',
+                                                                'admin' => true,
+                                                                $group['Group']['id']
+                                                            )
+                                                        );
                                                     ?>
+                                                <?php endif; ?>
                                                     <?php
                                                         echo $this->Admin->showNavBackwardLink(
                                                             array(

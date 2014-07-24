@@ -40,8 +40,8 @@
                                                 <td>
                                                 <?php
                                                     echo $this->Admin->showViewIconLink(array('controller' => 'groups', 'action' => 'view', 'admin' => true, $group['Group']['id']));
-                                                    echo $this->Admin->showEditIconLink(array('controller' => 'groups', 'action' => 'edit', 'admin' => true, $group['Group']['id']));
                                                     if ($group['Group']['id'] != Configure::read('Group.supper_id')) {
+                                                        echo $this->Admin->showEditIconLink(array('controller' => 'groups', 'action' => 'edit', 'admin' => true, $group['Group']['id']));
                                                         echo $this->Admin->showDeleteIconLink(array('controller' => 'groups', 'action' => 'delete', 'admin' => true, $group['Group']['id']));
                                                     }
                                                 ?>

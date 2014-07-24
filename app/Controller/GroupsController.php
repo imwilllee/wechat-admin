@@ -48,71 +48,101 @@ class GroupsController extends AppController {
 			'contain' => false
 		);
 		$group = $this->Group->find('first', $options);
-		$accesses = $this->GroupAccess->getUserGroupAccessIds($id);
 		$menus = $this->Menu->getMenuActions();
-		$checked = $id == Configure::read('Group.supper_id') ? true : false;
-		$this->set(compact('group', 'accesses', 'menus', 'checked'));
+		$this->request->data['GroupAccess'] = $this->GroupAccess->getGroupAccessForCheckbox($id);
+		$this->set(compact('group', 'menus'));
 	}
 
 /**
- * add method
+ * 创建用户组
  *
  * @return void
  */
 	public function admin_add() {
+		$this->actionTitle = '创建用户组';
 		if ($this->request->is('post')) {
-			$this->Group->create();
-			if ($this->Group->save($this->request->data)) {
-				$this->Session->setFlash(__('The group has been saved.'));
-				return $this->redirect(array('action' => 'index'));
+			if ($this->Group->saveAll($this->request->data)) {
+				$this->_showSuccessMessage('数据保存成功！');
+				return $this->redirect(array('controller' => 'groups', 'action' => 'index', 'admin' => true));
 			} else {
-				$this->Session->setFlash(__('The group could not be saved. Please, try again.'));
+				$this->_showErrorMessage('数据保存失败！请根据错误提示修正。');
 			}
 		}
+		$menus = $this->Menu->getMenuActions();
+		$this->set(compact('menus'));
 	}
 
 /**
- * edit method
+ * 编辑用户组
  *
  * @param string $id ID
  * @throws NotFoundDataException
  * @return void
  */
 	public function admin_edit($id = null) {
+		$this->actionTitle = '编辑用户组';
 		if (!$this->Group->exists($id)) {
-			throw new NotFoundDataException(__('Invalid group'));
+			throw new NotFoundDataException('数据不存在或已被删除！');
+		}
+		if (Configure::read('Group.supper_id') == $id) {
+			$this->_showWarningMessage('不能编辑超级管理员用户组！');
+			return $this->redirect(array('controller' => 'groups', 'action' => 'index', 'admin' => true));
 		}
 		if ($this->request->is(array('post', 'put'))) {
-			if ($this->Group->save($this->request->data)) {
-				$this->Session->setFlash(__('The group has been saved.'));
-				return $this->redirect(array('action' => 'index'));
+			if ($this->Group->validates($this->request->data)) {
+				$this->Group->begin();
+				$delete = $this->GroupAccess->deleteAll(array('GroupAccess.group_id' => $this->request->data['Group']['id']), false);
+				if ($delete && $this->Group->saveAll($this->request->data, array('validate' => false, 'atomic' => false))) {
+					$this->_showSuccessMessage('数据保存成功！');
+					$this->Group->commit();
+					return $this->redirect(array('controller' => 'groups', 'action' => 'index', 'admin' => true));
+				} else {
+					$this->Group->rollback();
+					$this->_showErrorMessage('数据保存失败！');
+				}
 			} else {
-				$this->Session->setFlash(__('The group could not be saved. Please, try again.'));
+				$this->_showErrorMessage('数据验证出错！请根据错误提示修正。');
 			}
 		} else {
-			$options = array('conditions' => array('Group.' . $this->Group->primaryKey => $id));
+			$options = array('conditions' => array('Group.id' => $id), 'contain' => false);
 			$this->request->data = $this->Group->find('first', $options);
+			$this->request->data['GroupAccess'] = $this->GroupAccess->getGroupAccessForCheckbox($id);
 		}
+		$menus = $this->Menu->getMenuActions();
+		$this->set(compact('menus'));
 	}
 
 /**
- * delete method
+ * 用户组删除
  *
  * @param string $id ID
  * @throws NotFoundDataException
  * @return void
  */
 	public function admin_delete($id = null) {
-		$this->Group->id = $id;
-		if (!$this->Group->exists()) {
-			throw new NotFoundDataException(__('Invalid group'));
+		$this->actionTitle = '用户组删除';
+		$options = array('conditions' => array('Group.id' => $id), 'contain' => false);
+		$group = !empty($id) ? $this->Group->find('first', $options) : null;
+		if (empty($group)) {
+			throw new NotFoundDataException('数据不存在或已被删除！');
 		}
-		$this->request->allowMethod('post', 'delete');
-		if ($this->Group->delete()) {
-			$this->Session->setFlash(__('The group has been deleted.'));
-		} else {
-			$this->Session->setFlash(__('The group could not be deleted. Please, try again.'));
+		if (Configure::read('Group.supper_id') == $id) {
+			$this->_showWarningMessage('不能删除超级管理员用户组！');
+			return $this->redirect(array('controller' => 'groups', 'action' => 'index', 'admin' => true));
 		}
-		return $this->redirect(array('action' => 'index'));
+
+		if ($this->request->is('delete')) {
+			$this->Group->begin();
+			$this->Group->id = $id;
+			if ($this->Group->delete() && $this->GroupAccess->deleteAll(array('GroupAccess.group_id' => $id), false)) {
+				$this->Group->commit();
+				$this->_showSuccessMessage('数据删除成功！');
+				return $this->redirect(array('controller' => 'groups', 'action' => 'index', 'admin' => true));
+			} else {
+				$this->Group->rollback();
+				$this->_showErrorMessage('数据删除失败！');
+			}
+		}
+		$this->set(compact('group'));
 	}
 }

@@ -1,7 +1,7 @@
 <?php
 App::uses('AppController', 'Controller');
 /**
- * 公众号管理控制器
+ * 微信公众号控制器
  *
  * @copyright WechatAdmin
  * @package   app.Controller
@@ -14,7 +14,7 @@ class AccountAdminController extends AppController {
  * 主标题
  * @var string
  */
-	public $controllerTitle = '微信公众平台';
+	public $controllerTitle = '微信公众号';
 
 /**
  * 公众号管理

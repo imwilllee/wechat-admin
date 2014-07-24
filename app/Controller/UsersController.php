@@ -186,7 +186,6 @@ class UsersController extends AppController {
 	public function admin_add() {
 		$this->actionTitle = '创建管理员';
 		if ($this->request->is('post')) {
-			$this->User->create();
 			if ($this->User->save($this->request->data, array('validateRule' => 'default'))) {
 				$this->_showSuccessMessage('数据保存成功！');
 				return $this->redirect(array('controller' => 'users', 'action' => 'index', 'admin' => true));

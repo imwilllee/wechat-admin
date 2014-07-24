@@ -154,4 +154,27 @@ class NoPermissionException extends HttpException {
 		}
 		parent::__construct($message, $code);
 	}
+
+}
+
+/**
+ * 错误请求
+ */
+class BadHttpRequestException extends HttpException {
+
+/**
+ * 构造函数
+ *
+ * @param string $message 异常信息
+ * @param int $code 异常代码
+ */
+	public function __construct($message = null, $code = 400) {
+		// 不记录日志
+		// Configure::write('Exception.log', false);
+		if (empty($message)) {
+			$message = 'Bad Request';
+		}
+		parent::__construct($message, $code);
+	}
+
 }

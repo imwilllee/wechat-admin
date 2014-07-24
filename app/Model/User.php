@@ -69,7 +69,7 @@ class User extends AppModel {
 				),
 				'maxLength' => array(
 					'rule' => array('maxLength', 32),
-					'message' => '邮箱长度长度超出限制！',
+					'message' => '邮箱长度超出限制！',
 					'last' => false
 				),
 				'unique' => array(

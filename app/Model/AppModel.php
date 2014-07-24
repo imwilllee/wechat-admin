@@ -26,7 +26,7 @@ class AppModel extends Model {
  * @return boolean
  */
 	public function beforeValidate($options = array()) {
-		if (isset($options['validate']) && $options['validate'] == true) {
+		if (empty($options) || (isset($options['validate']) && $options['validate'] == true)) {
 			$ruleFuc = !empty($options['validateRule']) ? 'validate_' . $options['validateRule'] : 'validate_default';
 			$method = Inflector::variable($ruleFuc);
 			if (method_exists($this, $method)) {
