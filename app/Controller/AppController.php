@@ -103,7 +103,6 @@ class AppController extends Controller {
 			);
 		} else {
 			// 前端加载配置
-			$this->_flashKey = 'Front';
 		}
 		parent::__construct($request, $response);
 	}

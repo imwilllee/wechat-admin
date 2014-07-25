@@ -92,6 +92,39 @@ class Menu extends AppModel {
 			'display_flg' => true
 		),
 		array(
+			'menu_code' => 'media',
+			'parent_code' => null,
+			'name' => '资源管理器',
+			'link' => null,
+			'class' => 'fa fa-folder',
+			'rank' => 0,
+			'display_flg' => true,
+		),
+		array(
+			'menu_code' => null,
+			'parent_code' => 'media',
+			'name' => '文件管理',
+			'link' => 'admin/media/index',
+			'class' => null,
+			'rank' => 0,
+			'display_flg' => true,
+			'menu_actions' => array(
+				array('link' => 'admin/media/upload', 'name' => '上传'),
+				array('link' => 'admin/media/index', 'name' => '查看'),
+				array('link' => 'admin/media/edit', 'name' => '编辑'),
+				array('link' => 'admin/media/delete', 'name' => '删除')
+			)
+		),
+		array(
+			'menu_code' => null,
+			'parent_code' => 'media',
+			'name' => '上传文件',
+			'link' => 'admin/media/upload',
+			'class' => null,
+			'rank' => 0,
+			'display_flg' => true
+		),
+		array(
 			'menu_code' => 'users',
 			'parent_code' => null,
 			'name' => '管理员用户组',
