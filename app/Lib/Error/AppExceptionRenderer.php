@@ -34,10 +34,16 @@ class AppExceptionRenderer extends ExceptionRenderer {
  */
 	protected function _outputMessage($template) {
 		if ($this->controller->_admin == true) {
-			if ($this->controller->Auth->loggedIn()) {
-				$this->controller->layout = 'Admin/error';
+			if ($this->controller->request->is('ajax')) {
+				$this->controller->layout = false;
+				$this->controller->response->type('json');
+				$template = 'ajax_' . $template;
 			} else {
-				$this->controller->layout = 'Admin/not_login_error';
+				if ($this->controller->Auth->loggedIn()) {
+					$this->controller->layout = 'Admin/error';
+				} else {
+					$this->controller->layout = 'Admin/not_login_error';
+				}
 			}
 
 			$template = 'Admin/' . $template;

@@ -17,6 +17,15 @@ class MediaController extends AppController {
 	public $controllerTitle = '资源管理器';
 
 /**
+ * 控制器方法调用前回调方法
+ *
+ * @return void
+ */
+	public function beforeFilter() {
+		parent::beforeFilter();
+	}
+
+/**
  * 文件管理
  * 
  * @return void

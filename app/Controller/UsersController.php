@@ -30,6 +30,9 @@ class UsersController extends AppController {
 	public function beforeFilter() {
 		if ($this->_admin == true) {
 			$this->Auth->allow(array('admin_login', 'admin_logout'));
+			if ($this->request->is('ajax')) {
+				$this->Security->unlockedActions = array('admin_upload');
+			}
 		}
 		parent::beforeFilter();
 	}
@@ -269,6 +272,35 @@ class UsersController extends AppController {
 		$this->set(compact('user'));
 	}
 
+/**
+ * 上传头像
+ * 
+ * @return void
+ */
+	public function admin_upload() {
+		$this->autoRender = false;
+		if ($this->request->is('ajax')) {
+			$rs = array('err' => 1, 'err_msg' => '', 'url' => '');
+			if (empty($this->request->form['avatar']['tmp_name'])) {
+				$rs['err_msg'] = '没有选择上传文件！';
+			} else {
+				$ext = pathinfo($this->request->form['avatar']['name'], PATHINFO_EXTENSION);
+				$dir = Configure::read('User.avatar.save_dir');
+				$fileName = md5_file($this->request->form['avatar']['tmp_name']) . '.' . $ext;
+				$path = $dir . $fileName;
+				if (move_uploaded_file($this->request->form['avatar']['tmp_name'], $path)) {
+					$rs['err'] = 0;
+					$rs['url'] = sprintf(Configure::read('User.avatar.preview_url'), $fileName);
+				}
+			}
+			$this->response->type('json');
+			$this->response->body(json_encode($rs));
+		} else {
+			$this->response->statusCode(404);
+			$this->response->send();
+			$this->_stop();
+		}
+	}
 /**
  * 数据排他限制
  * 

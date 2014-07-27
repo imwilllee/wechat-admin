@@ -31,6 +31,12 @@ $config = array(
 			0 => '保密',
 			1 => '男性',
 			2 => '女性'
+		),
+		'avatar' => array(
+			'save_dir' => WWW_ROOT . 'img' . DS . 'avatar' . DS,
+			'preview_url' => '/img/avatar/%s',
+			// 限制大小(KB)
+			'max_size' => 30
 		)
 	),
 /**
