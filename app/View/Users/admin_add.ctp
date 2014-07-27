@@ -168,9 +168,10 @@
                                                             <div class="input-group col-xs-12 col-md-6">
                                                             <?php echo $this->Form->text('avatar', array('placeholder' => '头像路径', 'class' => 'form-control')); ?>
                                                                 <div class="input-group-btn">
-                                                                    <button class="btn btn-success btn-flat" type="button" id="upload-avatar">
+                                                                    <div class="btn btn-default btn-flat btn-file" >
                                                                     <i class="fa fa-upload"></i> 上传头像
-                                                                    </button>
+                                                                    <input type="file" name="avatar_file" id="avatar-file">
+                                                                    </div>
                                                                 </div>
                                                             </div>
 
@@ -189,8 +190,6 @@
                         </div>
                     </div>
 <?php echo $this->Form->end(); ?>
-<div style="display:none;">
-    <input id="avatar-file" type="file" name="avatar">
-</div>
+
 <?php echo $this->element('Admin/Common/datetimepicker'); ?>
 <?php echo $this->element('Admin/Users/upload_avatar'); ?>

@@ -5,6 +5,7 @@ $(function () {
     $('#avatar-file').fileupload({
         dataType: 'json',
         url: '<?php echo $this->Html->url(array('controller' => 'users', 'action' => 'upload', 'admin' => true)); ?>',
+        formData: false,
         add: function (e, data) {
             if (data.originalFiles.length > 1) {
                 alert('只能选择一张图片！');
@@ -33,9 +34,7 @@ $(function () {
             }
         }
     });
-    $('#upload-avatar').on('click', function(){
-        $('#avatar-file').trigger('click');
-    });
+
 });
         </script>
 <?php $this->end(); ?>

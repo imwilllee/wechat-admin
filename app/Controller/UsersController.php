@@ -281,14 +281,14 @@ class UsersController extends AppController {
 		$this->autoRender = false;
 		if ($this->request->is('ajax')) {
 			$rs = array('err' => 1, 'err_msg' => '', 'url' => '');
-			if (empty($this->request->form['avatar']['tmp_name'])) {
+			if (empty($this->request->form['avatar_file']['tmp_name'])) {
 				$rs['err_msg'] = '没有选择上传文件！';
 			} else {
-				$ext = pathinfo($this->request->form['avatar']['name'], PATHINFO_EXTENSION);
+				$ext = pathinfo($this->request->form['avatar_file']['name'], PATHINFO_EXTENSION);
 				$dir = Configure::read('User.avatar.save_dir');
-				$fileName = md5_file($this->request->form['avatar']['tmp_name']) . '.' . $ext;
+				$fileName = md5_file($this->request->form['avatar_file']['tmp_name']) . '.' . $ext;
 				$path = $dir . $fileName;
-				if (move_uploaded_file($this->request->form['avatar']['tmp_name'], $path)) {
+				if (move_uploaded_file($this->request->form['avatar_file']['tmp_name'], $path)) {
 					$rs['err'] = 0;
 					$rs['url'] = sprintf(Configure::read('User.avatar.preview_url'), $fileName);
 				}

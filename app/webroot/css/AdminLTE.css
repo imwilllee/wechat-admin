@@ -1833,8 +1833,8 @@ Component: timeline
 }
 .btn.btn-file {
   position: relative;
-  width: 120px;
-  height: 35px;
+  width: auto;
+  height: 34px;
   overflow: hidden;
 }
 .btn.btn-file > input[type='file'] {
