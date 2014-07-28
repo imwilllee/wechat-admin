@@ -33,8 +33,10 @@ $config = array(
 			2 => '女性'
 		),
 		'avatar' => array(
-			'save_dir' => WWW_ROOT . 'img' . DS . 'avatar' . DS,
-			'preview_url' => '/img/avatar/%s',
+			'save_dir' => WWW_ROOT . 'uploads' . DS . 'avatar' . DS,
+			'save_model' => 'Media',
+			'preview_url' => '/uploads/avatar/',
+			'save_name_rule' => 'uuid',
 			// 限制大小(KB)
 			'max_size' => 50
 		)

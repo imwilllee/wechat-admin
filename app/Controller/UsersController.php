@@ -17,6 +17,12 @@ class UsersController extends AppController {
 	public $uses = array('User');
 
 /**
+ * 加载组件
+ * @var array
+ */
+	public $components = array('FileUpload');
+
+/**
  * 主标题
  * @var string
  */
@@ -281,16 +287,16 @@ class UsersController extends AppController {
 		$this->autoRender = false;
 		if ($this->request->is('ajax')) {
 			$rs = array('err' => 1, 'err_msg' => '', 'url' => '');
-			if (empty($this->request->form['avatar_file']['tmp_name'])) {
+			if (empty($this->request->form['avatar_file'])) {
 				$rs['err_msg'] = '没有选择上传文件！';
 			} else {
-				$ext = pathinfo($this->request->form['avatar_file']['name'], PATHINFO_EXTENSION);
-				$dir = Configure::read('User.avatar.save_dir');
-				$fileName = md5_file($this->request->form['avatar_file']['tmp_name']) . '.' . $ext;
-				$path = $dir . $fileName;
-				if (move_uploaded_file($this->request->form['avatar_file']['tmp_name'], $path)) {
+				$this->FileUpload->setConfig(Configure::read('User.avatar'));
+				$upload = $this->FileUpload->upload($this->request->form['avatar_file']);
+				if ($upload !== false) {
 					$rs['err'] = 0;
-					$rs['url'] = sprintf(Configure::read('User.avatar.preview_url'), $fileName);
+					$rs['url'] = Configure::read('User.avatar.preview_url') . $upload['save_name'];
+				} else {
+					$rs['err_msg'] = $this->FileUpload->getErrorMessage();
 				}
 			}
 			$this->response->type('json');

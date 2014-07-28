@@ -74,7 +74,7 @@ class AppController extends Controller {
 			// 管理端加载配置
 			$this->_admin = true;
 			$this->_flashKey = 'Admin';
-			$this->components = array(
+			$components = array(
 				'Session',
 				'Paginator',
 				'Auth' => array(
@@ -101,6 +101,7 @@ class AppController extends Controller {
 					'csrfUseOnce' => false
 				)
 			);
+			$this->components = array_merge($components, $this->components);
 		} else {
 			// 前端加载配置
 		}
